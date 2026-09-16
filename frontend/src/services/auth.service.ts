@@ -1,36 +1,30 @@
-/**
- * Auth Service
- *
- * Handles authentication API calls: login, register, logout, session management.
- *
- * @owner Team Member 1 — Authentication
- */
+import axios from 'axios';
 
-// Uncomment when implementing service functions:
-// import api from './api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// TODO: Implement auth service functions
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const authService = {
-  // login: async (email: string, password: string) => {
-  //   const response = await api.post('/auth/login', { email, password });
-  //   return response.data;
-  // },
-
-  // register: async (name: string, email: string, password: string) => {
-  //   const response = await api.post('/auth/register', { name, email, password });
-  //   return response.data;
-  // },
-
-  // logout: async () => {
-  //   const response = await api.post('/auth/logout');
-  //   return response.data;
-  // },
-
-  // getMe: async () => {
-  //   const response = await api.get('/auth/me');
-  //   return response.data;
-  // },
+export const loginUser = async (email, password) => {
+  const response = await api.post('/auth/login', { email, password });
+  return response.data;
 };
 
-export default authService;
+export const registerUser = async (name, email, password) => {
+  const response = await api.post('/auth/register', { name, email, password });
+  return response.data;
+};
+
+export const logoutUser = async () => {
+  await api.post('/auth/logout');
+};
+
+export const getMe = async () => {
+  const response = await api.get('/auth/me');
+  return response.data;
+};

@@ -19,8 +19,13 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    skillEndorsements: [{ type: String }],
+    helpful: { type: Number, default: 0 },
   },
   {
     timestamps: true,

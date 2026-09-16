@@ -22,8 +22,16 @@ const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    techStack: [{ type: String }],
+    githubUrl: { type: String },
+    liveUrl: { type: String },
+    thumbnail: { type: String },
+    status: { type: String, enum: ['in-progress', 'completed', 'archived'], default: 'completed' },
+    collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    tags: [{ type: String }],
   },
   {
     timestamps: true,

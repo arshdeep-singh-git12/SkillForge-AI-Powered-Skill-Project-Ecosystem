@@ -1,51 +1,67 @@
-/**
- * Team Controller
- * 
- * Handles team formation and membership management.
- * Uses rule-based matching by skills and availability (no AI).
- * 
- * Planned methods:
- *   getAllTeams(req, res)  — List all teams
- *   getTeamById(req, res) — Get team details + members
- *   createTeam(req, res)  — Create a new team
- *   findMatches(req, res) — Find matching teams/members by skills
- *   joinTeam(req, res)    — Add current user to team
- *   leaveTeam(req, res)   — Remove current user from team
- * 
- * @owner Team Member 7 — Teams & Dashboard
- */
-
-// const Team = require('../models/Team');
-// const matchingService = require('../services/matching.service');
+const Team = require('../models/Team');
 
 const getAllTeams = async (req, res) => {
-  // TODO: Fetch all teams
-  res.status(501).json({ message: 'Get all teams not implemented yet' });
-};
-
-const getTeamById = async (req, res) => {
-  // TODO: Fetch team by ID with populated members
-  res.status(501).json({ message: 'Get team not implemented yet' });
+  try {
+    const teams = await Team.find().populate('owner members', 'name avatar');
+    res.json(teams);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 const createTeam = async (req, res) => {
-  // TODO: Create new team
-  res.status(501).json({ message: 'Create team not implemented yet' });
+  try {
+    const { name, description, requiredSkills, maxMembers } = req.body;
+    
+    if (!name || !description) {
+      return res.status(400).json({ message: 'Name and description are required' });
+    }
+
+    const team = await Team.create({
+      owner: req.user.id,
+      name,
+      description,
+      requiredSkills: requiredSkills || [],
+      maxMembers: maxMembers || 4,
+      members: [req.user.id] // Owner is automatically a member
+    });
+
+    const populatedTeam = await Team.findById(team._id).populate('owner members', 'name avatar');
+    res.status(201).json(populatedTeam);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
-const findMatches = async (req, res) => {
-  // TODO: Use matchingService to find compatible teams/members
-  res.status(501).json({ message: 'Find matches not implemented yet' });
+const getTeamById = async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id).populate('owner members', 'name avatar');
+    if (!team) return res.status(404).json({ message: 'Not found' });
+    res.json(team);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
-const joinTeam = async (req, res) => {
-  // TODO: Add user to team
-  res.status(501).json({ message: 'Join team not implemented yet' });
+const requestJoin = async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+    if (!team) return res.status(404).json({ message: 'Not found' });
+
+    // Mock logic: simply add them if not full
+    if (team.members.length >= team.maxMembers) {
+      return res.status(400).json({ message: 'Team is full' });
+    }
+
+    if (!team.members.includes(req.user.id)) {
+      team.members.push(req.user.id);
+      await team.save();
+    }
+
+    res.json({ message: 'Successfully joined team!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
-const leaveTeam = async (req, res) => {
-  // TODO: Remove user from team
-  res.status(501).json({ message: 'Leave team not implemented yet' });
-};
-
-module.exports = { getAllTeams, getTeamById, createTeam, findMatches, joinTeam, leaveTeam };
+module.exports = { getAllTeams, createTeam, getTeamById, requestJoin };

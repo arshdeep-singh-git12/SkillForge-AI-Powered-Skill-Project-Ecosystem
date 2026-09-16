@@ -23,8 +23,13 @@ const mongoose = require('mongoose');
 
 const teamSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    requiredSkills: [{ type: String }],
+    maxMembers: { type: Number, default: 4 },
+    status: { type: String, enum: ['recruiting', 'active', 'completed'], default: 'recruiting' },
   },
   {
     timestamps: true,

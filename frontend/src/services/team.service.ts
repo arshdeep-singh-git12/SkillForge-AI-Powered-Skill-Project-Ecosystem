@@ -1,46 +1,26 @@
-/**
- * Team Service
- *
- * Handles team formation and matching API calls.
- *
- * @owner Team Member 7 — Teams & Dashboard
- */
+import axios from 'axios';
 
-// Uncomment when implementing service functions:
-// import api from './api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// TODO: Implement team service functions
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const teamService = {
-  // getAllTeams: async () => {
-  //   const response = await api.get('/teams');
-  //   return response.data;
-  // },
-
-  // getTeamById: async (teamId: string) => {
-  //   const response = await api.get(`/teams/${teamId}`);
-  //   return response.data;
-  // },
-
-  // createTeam: async (data: object) => {
-  //   const response = await api.post('/teams', data);
-  //   return response.data;
-  // },
-
-  // findMatches: async (criteria: object) => {
-  //   const response = await api.post('/teams/match', criteria);
-  //   return response.data;
-  // },
-
-  // joinTeam: async (teamId: string) => {
-  //   const response = await api.post(`/teams/${teamId}/join`);
-  //   return response.data;
-  // },
-
-  // leaveTeam: async (teamId: string) => {
-  //   const response = await api.post(`/teams/${teamId}/leave`);
-  //   return response.data;
-  // },
+export const getTeams = async () => {
+  const response = await api.get('/teams');
+  return response.data;
 };
 
-export default teamService;
+export const createTeam = async (teamData: any) => {
+  const response = await api.post('/teams', teamData);
+  return response.data;
+};
+
+export const joinTeam = async (teamId: string) => {
+  const response = await api.post(`/teams/${teamId}/join`);
+  return response.data;
+};

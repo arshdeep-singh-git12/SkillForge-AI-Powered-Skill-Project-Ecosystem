@@ -1,44 +1,47 @@
-/**
- * Project Controller
- * 
- * Handles project portfolio CRUD operations.
- * Projects showcase completed work with descriptions, tech stack, and links.
- * 
- * Planned methods:
- *   getAllProjects(req, res)  — List projects with pagination/filtering
- *   getProjectById(req, res) — Get single project details
- *   createProject(req, res)  — Create a new project entry
- *   updateProject(req, res)  — Update project details
- *   deleteProject(req, res)  — Remove a project
- * 
- * @owner Team Member 3 — Project Portfolio
- */
-
-// const Project = require('../models/Project');
+const Project = require('../models/Project');
 
 const getAllProjects = async (req, res) => {
-  // TODO: Fetch all projects with pagination
-  res.status(501).json({ message: 'Get all projects not implemented yet' });
-};
-
-const getProjectById = async (req, res) => {
-  // TODO: Fetch project by req.params.id
-  res.status(501).json({ message: 'Get project not implemented yet' });
+  try {
+    const projects = await Project.find().populate('owner', 'name avatar').sort({ createdAt: -1 });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 const createProject = async (req, res) => {
-  // TODO: Create new project
-  res.status(501).json({ message: 'Create project not implemented yet' });
+  try {
+    const { title, description, techStack, githubUrl, liveUrl, thumbnail } = req.body;
+    
+    if (!title || !description) {
+      return res.status(400).json({ message: 'Title and description are required' });
+    }
+
+    const project = await Project.create({
+      owner: req.user.id,
+      title,
+      description,
+      techStack: techStack || [],
+      githubUrl,
+      liveUrl,
+      thumbnail
+    });
+
+    const populatedProject = await Project.findById(project._id).populate('owner', 'name avatar');
+    res.status(201).json(populatedProject);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
-const updateProject = async (req, res) => {
-  // TODO: Update project
-  res.status(501).json({ message: 'Update project not implemented yet' });
+const getProjectById = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id).populate('owner', 'name avatar');
+    if (!project) return res.status(404).json({ message: 'Not found' });
+    res.json(project);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
-const deleteProject = async (req, res) => {
-  // TODO: Delete project
-  res.status(501).json({ message: 'Delete project not implemented yet' });
-};
-
-module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject };
+module.exports = { getAllProjects, createProject, getProjectById };

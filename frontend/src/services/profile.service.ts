@@ -1,41 +1,33 @@
-/**
- * Profile Service
- *
- * Handles user profile and skill-related API calls.
- *
- * @owner Team Member 2 — Skill Profiles
- */
+import axios from 'axios';
 
-// Uncomment when implementing service functions:
-// import api from './api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// TODO: Implement profile service functions
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const profileService = {
-  // getUserProfile: async (userId: string) => {
-  //   const response = await api.get(`/users/${userId}`);
-  //   return response.data;
-  // },
-
-  // updateProfile: async (userId: string, data: object) => {
-  //   const response = await api.put(`/users/${userId}`, data);
-  //   return response.data;
-  // },
-
-  // getUserSkills: async (userId: string) => {
-  //   const response = await api.get(`/skills/user/${userId}`);
-  //   return response.data;
-  // },
-
-  // addSkill: async (data: object) => {
-  //   const response = await api.post('/skills', data);
-  //   return response.data;
-  // },
-
-  // updateSkill: async (skillId: string, data: object) => {
-  //   const response = await api.put(`/skills/${skillId}`, data);
-  //   return response.data;
-  // },
+export const updateProfile = async (profileData: { name?: string; bio?: string; avatar?: string }) => {
+  const response = await api.put('/users/profile', profileData);
+  return response.data;
 };
 
-export default profileService;
+export const getUserProfile = async (id: string) => {
+  const response = await api.get(`/users/${id}`);
+  return response.data;
+};
+
+// --- Skill Endpoints ---
+
+export const getUserSkills = async (userId: string) => {
+  const response = await api.get(`/skills/user/${userId}`);
+  return response.data;
+};
+
+export const addSkill = async (skillData: { name: string; proficiency: number; category?: string }) => {
+  const response = await api.post('/skills', skillData);
+  return response.data;
+};

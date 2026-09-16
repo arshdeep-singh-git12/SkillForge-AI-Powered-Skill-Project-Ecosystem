@@ -15,12 +15,12 @@
 
 const express = require('express');
 const router = express.Router();
-// const skillController = require('../controllers/skill.controller');
+const skillController = require('../controllers/skill.controller');
+const { protect } = require('../middleware/auth.middleware');
 
-// TODO: Implement skill routes
-// router.get('/user/:userId', skillController.getUserSkills);
-// router.post('/', authMiddleware, skillController.addSkill);
-// router.put('/:id', authMiddleware, skillController.updateSkill);
-// router.delete('/:id', authMiddleware, skillController.deleteSkill);
+router.get('/user/:userId', skillController.getUserSkills);
+router.post('/', protect, skillController.addSkill);
+router.put('/:id', protect, skillController.updateSkill);
+router.delete('/:id', protect, skillController.deleteSkill);
 
 module.exports = router;

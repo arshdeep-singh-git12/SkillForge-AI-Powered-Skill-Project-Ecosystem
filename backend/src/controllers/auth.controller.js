@@ -1,41 +1,108 @@
-/**
- * Auth Controller
- * 
- * Handles user authentication: registration, login, logout.
- * Uses bcrypt for password hashing and JWT for token generation.
- * 
- * Planned methods:
- *   register(req, res) — Create new user, hash password, return JWT
- *   login(req, res)    — Verify credentials, return JWT
- *   logout(req, res)   — Invalidate token (if using blacklist)
- *   getMe(req, res)    — Return current authenticated user from JWT
- * 
- * @owner Team Member 1 — Authentication
- */
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-// const User = require('../models/User');
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
-// const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+};
 
 const register = async (req, res) => {
-  // TODO: Implement user registration
-  res.status(501).json({ message: 'Register not implemented yet' });
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      passwordHash: password,
+    });
+
+    if (user) {
+      const token = generateToken(user._id);
+      
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
+      res.status(201).json({
+        _id: user.id,
+        name: user.name,
+        email: user.email
+      });
+    } else {
+      res.status(400).json({ message: 'Invalid user data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 const login = async (req, res) => {
-  // TODO: Implement user login
-  res.status(501).json({ message: 'Login not implemented yet' });
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    const user = await User.findOne({ email }).select('+passwordHash');
+
+    if (user && (await bcrypt.compare(password, user.passwordHash))) {
+      const token = generateToken(user._id);
+      
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 const logout = async (req, res) => {
-  // TODO: Implement logout
-  res.status(501).json({ message: 'Logout not implemented yet' });
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+  res.json({ message: 'Logout successful' });
 };
 
 const getMe = async (req, res) => {
-  // TODO: Return authenticated user from req.user
-  res.status(501).json({ message: 'Get me not implemented yet' });
+  try {
+    const user = await User.findById(req.user.id);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 module.exports = { register, login, logout, getMe };

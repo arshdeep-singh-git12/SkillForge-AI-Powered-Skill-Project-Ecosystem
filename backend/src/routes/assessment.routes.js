@@ -15,12 +15,12 @@
 
 const express = require('express');
 const router = express.Router();
-// const assessmentController = require('../controllers/assessment.controller');
+const assessmentController = require('../controllers/assessment.controller');
+const { protect } = require('../middleware/auth.middleware');
 
-// TODO: Implement assessment routes
-// router.get('/', assessmentController.getAllAssessments);
-// router.get('/:id', assessmentController.getAssessmentById);
-// router.post('/submit', authMiddleware, assessmentController.submitCode);
-// router.get('/results/:id', authMiddleware, assessmentController.getResults);
+router.get('/', assessmentController.getAllAssessments);
+router.get('/:id', assessmentController.getAssessmentById);
+router.post('/:id/submit', protect, assessmentController.submitCode);
+router.get('/:id/results', protect, assessmentController.getResults);
 
 module.exports = router;

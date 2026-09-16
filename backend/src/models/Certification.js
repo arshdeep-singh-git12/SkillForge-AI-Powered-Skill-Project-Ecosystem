@@ -21,8 +21,15 @@ const mongoose = require('mongoose');
 
 const certificationSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    title: { type: String, required: true },
+    issuer: { type: String, required: true },
+    description: { type: String },
+    dateEarned: { type: Date, required: true },
+    expiryDate: { type: Date },
+    credentialUrl: { type: String },
+    badgeImage: { type: String },
+    type: { type: String, enum: ['assessment', 'course', 'external'], default: 'external' },
   },
   {
     timestamps: true,

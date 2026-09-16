@@ -1,31 +1,16 @@
-/**
- * GitHub Service
- *
- * Handles GitHub integration API calls.
- *
- * @owner Team Member 6 — GitHub & Reviews
- */
+import axios from 'axios';
 
-// Uncomment when implementing service functions:
-// import api from './api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// TODO: Implement GitHub service functions
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const githubService = {
-  // getUserRepos: async (username: string) => {
-  //   const response = await api.get(`/github/repos/${username}`);
-  //   return response.data;
-  // },
-
-  // getUserStats: async (username: string) => {
-  //   const response = await api.get(`/github/stats/${username}`);
-  //   return response.data;
-  // },
-
-  // connectAccount: async (code: string) => {
-  //   const response = await api.post('/github/connect', { code });
-  //   return response.data;
-  // },
+export const getRepoStats = async (repoUrl: string) => {
+  const response = await api.get(`/github/stats?repoUrl=${encodeURIComponent(repoUrl)}`);
+  return response.data;
 };
-
-export default githubService;

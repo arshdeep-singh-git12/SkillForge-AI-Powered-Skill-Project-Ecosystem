@@ -23,8 +23,26 @@ const mongoose = require('mongoose');
 
 const assessmentSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    difficulty: { type: String, enum: ['easy', 'medium', 'hard'], default: 'easy' },
+    language: { type: String, required: true },
+    starterCode: { type: String, default: '' },
+    testCases: [
+      {
+        input: { type: String, required: true },
+        expectedOutput: { type: String, required: true },
+      },
+    ],
+    points: { type: Number, default: 10 },
+    submissions: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        code: { type: String },
+        result: { type: String, enum: ['passed', 'failed', 'error'] },
+        submittedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

@@ -1,36 +1,21 @@
-/**
- * Review Service
- *
- * Handles peer review API calls.
- *
- * @owner Team Member 6 — GitHub & Reviews
- */
+import axios from 'axios';
 
-// Uncomment when implementing service functions:
-// import api from './api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-// TODO: Implement review service functions
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const reviewService = {
-  // getProjectReviews: async (projectId: string) => {
-  //   const response = await api.get(`/reviews/project/${projectId}`);
-  //   return response.data;
-  // },
-
-  // createReview: async (data: object) => {
-  //   const response = await api.post('/reviews', data);
-  //   return response.data;
-  // },
-
-  // updateReview: async (reviewId: string, data: object) => {
-  //   const response = await api.put(`/reviews/${reviewId}`, data);
-  //   return response.data;
-  // },
-
-  // deleteReview: async (reviewId: string) => {
-  //   const response = await api.delete(`/reviews/${reviewId}`);
-  //   return response.data;
-  // },
+export const getReviews = async () => {
+  const response = await api.get('/reviews');
+  return response.data;
 };
 
-export default reviewService;
+export const createReview = async (reviewData: any) => {
+  const response = await api.post('/reviews', reviewData);
+  return response.data;
+};

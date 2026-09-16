@@ -21,8 +21,30 @@ const mongoose = require('mongoose');
 
 const skillSchema = new mongoose.Schema(
   {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    name: {
+      type: String,
+      required: [true, 'Skill name is required'],
+      trim: true,
+      maxlength: [50, 'Skill name cannot exceed 50 characters'],
+    },
+    category: {
+      type: String,
+      required: [true, 'Category is required'],
+      trim: true,
+      default: 'General',
+    },
+    proficiency: {
+      type: Number,
+      required: [true, 'Proficiency is required'],
+      min: [0, 'Proficiency cannot be less than 0'],
+      max: [100, 'Proficiency cannot exceed 100'],
+      default: 0,
+    },
   },
   {
     timestamps: true,
