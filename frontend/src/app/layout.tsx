@@ -15,6 +15,8 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: '--font-mono',
 });
 
+import ClientLayoutWrapper from '../components/layout/ClientLayoutWrapper';
+
 export const metadata: Metadata = {
   title: 'SkillForge — Engineered Skills & Precision Ecosystem',
   description:
@@ -29,8 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${barlow.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-[#15181d] text-[#eaedf0] min-h-screen antialiased">
-        {/* TODO: Add AuthProvider and ThemeProvider wrappers here */}
-        <main>{children}</main>
+        <ClientLayoutWrapper>
+          {children}
+        </ClientLayoutWrapper>
       </body>
     </html>
   );
