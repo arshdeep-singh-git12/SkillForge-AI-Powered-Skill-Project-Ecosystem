@@ -42,7 +42,7 @@ export default function ProjectModal({ isOpen, onClose, onSubmit }: ProjectModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-machined-900/80 backdrop-blur-md p-4">
-      <div className="bg-machined-800 border border-machined-600 rounded-2xl p-8 w-full max-w-lg shadow-2xl relative">
+      <div className="bg-machined-800 border border-machined-600 rounded-2xl p-8 w-full max-w-lg shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-machined-400 hover:text-cyan transition-colors"

@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 title SkillForge Startup Script
 color 0B
 
