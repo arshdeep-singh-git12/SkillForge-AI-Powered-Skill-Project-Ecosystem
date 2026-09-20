@@ -44,7 +44,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { logoutUser } = await import('../services/auth.service');
       await logoutUser();
-    } catch (e) {}
+    } catch (e) {
+      console.error('Logout failed:', e);
+    }
     setUser(null);
   };
 

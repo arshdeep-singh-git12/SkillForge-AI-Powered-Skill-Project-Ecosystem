@@ -129,7 +129,7 @@ export default function LoginPage() {
           
           <div className="bg-machined-900/50 border-t border-machined-600 px-8 py-6 text-center">
             <p className="text-sm font-mono text-machined-400">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-cyan font-bold hover:text-cyan-hover transition-colors">
                 Sign Up
               </Link>

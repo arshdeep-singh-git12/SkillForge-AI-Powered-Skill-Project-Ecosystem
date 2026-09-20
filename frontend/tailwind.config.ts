@@ -9,39 +9,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Kestrel Precision Technical Industrial Palette
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',        // #0cbde8 Cold Cyan
+          DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
-        'muted-foreground': 'hsl(var(--muted-foreground))', // #7a889b
-        border: 'hsl(var(--border))',                       // #2d333b
+        'muted-foreground': 'hsl(var(--muted-foreground))',
+        border: 'hsl(var(--border))',
         card: {
-          DEFAULT: 'hsl(var(--card))',                      // #1c2026 Machined Steel Dark
-          elevated: 'hsl(var(--card-elevated))',            // #232830
+          DEFAULT: 'hsl(var(--card))',
+          elevated: 'hsl(var(--card-elevated))',
         },
-        spec: 'hsl(var(--spec))',                           // #f5b922 Tolerance Highlight Amber
-        // Direct hex helpers for rapid styling
-        machined: {
-          900: '#15181d', // Machined dark base
-          800: '#1c2026', // Card surface
-          700: '#232830', // Elevated surface
-          600: '#2d333b', // Borders
-          500: '#475363', // Muted borders / dividers
-          400: '#7a889b', // Secondary / muted text
-          100: '#eaedf0', // Crisp foreground text
-        },
-        cyan: {
-          DEFAULT: '#0cbde8', // Cold cyan brand
-          hover: '#0aa1c6',
-          dim: 'rgba(12, 189, 232, 0.12)',
-        },
+        spec: 'hsl(var(--spec))',
+        vertex: {
+          dark: '#020204',
+          cyan: '#0cbde8',
+          teal: '#14a8c6',
+          navy: '#0a111d'
+        }
       },
       fontFamily: {
-        sans: ['var(--font-barlow)', 'Barlow', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-mono)', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        sans: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
+        serif: ['var(--font-playfair)', '"Playfair Display"', 'serif'],
+        mono: ['ui-monospace', 'monospace'],
       },
       letterSpacing: {
         tightest: '-0.025em',

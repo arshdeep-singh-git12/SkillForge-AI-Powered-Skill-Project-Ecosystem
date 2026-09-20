@@ -1,20 +1,21 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Barlow, IBM_Plex_Mono } from 'next/font/google';
+import { Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import ClientLayoutWrapper from '../components/layout/ClientLayoutWrapper';
 
-const barlow = Barlow({
+const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-barlow',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
+  style: ['normal', 'italic'],
+  weight: ['600'],
+  variable: '--font-playfair',
 });
 
 export const metadata: Metadata = {
@@ -29,8 +30,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${barlow.variable} ${ibmPlexMono.variable}`}>
-      <body className="bg-[#15181d] text-[#eaedf0] min-h-screen antialiased">
+    <html lang="en" className={`${poppins.variable} ${playfair.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add('intro'); setTimeout(function(){document.documentElement.classList.remove('intro');},4000);` }} />
+      </head>
+      <body className="bg-[#020204] text-[#fff] min-h-screen antialiased font-sans">
         <AuthProvider>
           <ClientLayoutWrapper>
             {children}
