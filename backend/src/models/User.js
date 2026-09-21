@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Never include in query results by default
     },
@@ -56,6 +55,18 @@ const userSchema = new mongoose.Schema(
         ref: 'Skill',
       },
     ],
+    googleId: {
+      type: String,
+      default: '',
+    },
+    githubId: {
+      type: String,
+      default: '',
+    },
+    linkedinId: {
+      type: String,
+      default: '',
+    },
     githubUsername: {
       type: String,
       default: '',
@@ -73,7 +84,7 @@ const userSchema = new mongoose.Schema(
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('passwordHash')) {
+  if (!this.isModified('passwordHash') || !this.passwordHash) {
     return next();
   }
   const salt = await bcrypt.genSalt(10);

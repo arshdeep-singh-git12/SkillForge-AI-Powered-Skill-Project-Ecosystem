@@ -20,8 +20,8 @@ echo Booting up the SkillForge Engineered Ecosystem...
 echo.
 
 echo [1/2] Starting Backend Server (MongoDB ^& Express)...
-start cmd /k "title SkillForge Backend && cd backend && node src\server.js"
-echo  -^> Backend terminal launched on port 5000.
+start cmd /k "title SkillForge Backend && cd backend && npm run dev"
+echo  -^> Backend terminal launched on port 5000 with nodemon.
 
 timeout /t 3 >nul
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export default function VertexLandingPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -301,6 +302,7 @@ export default function VertexLandingPage() {
           .wa svg{width:32px;height:32px}
           .burger{display:grid;place-content:center;gap:4px;position:absolute;right:12px;top:11px;width:42px;height:42px;padding:0;border:0;border-radius:14px;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
           .burger span{display:block;width:19px;height:1.6px;border-radius:2px;background:rgba(255,255,255,.92);transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .18s}
+          .v-badge{left:301px;top:237px;width:378px;height:39px;border-radius:12px;background:linear-gradient(90deg, rgba(60,224,255,0.08) 0%, rgba(10,134,216,0.08) 100%);border:1px solid rgba(60,224,255,0.25);backdrop-filter:blur(10px);box-shadow:inset 0 0 20px rgba(60,224,255,0.05),0 8px 24px rgba(0,0,0,.4), 0 0 15px rgba(60,224,255,0.1)}
           .navmenu{display:block;position:absolute;left:0;right:0;top:74px;padding:12px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(11,15,22,.985),rgba(7,10,16,.99));-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);box-shadow:0 26px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .24s ease,transform .28s cubic-bezier(.4,0,.2,1),visibility .28s}
           .links{position:static;display:flex;flex-direction:column;align-items:stretch;height:auto;gap:2px;transform:none!important}
           .links a{font-size:15px;padding:11px 14px;border-radius:12px;color:rgba(255,255,255,.9);transition:background .2s,color .2s}
@@ -404,15 +406,15 @@ export default function VertexLandingPage() {
             </button>
             <div className="navmenu" id="navmenu">
               <div className="links" id="links">
-                <a href="/">Home</a>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/assessments">Assessments</a>
-                <a href="/projects">Projects</a>
-                <a href="/teams">Teams</a>
+                <Link href="/">Home</Link>
+                <Link href="/login">Dashboard</Link>
+                <Link href="/login">Assessments</Link>
+                <Link href="/login">Projects</Link>
+                <Link href="/login">Teams</Link>
               </div>
               <div className="nav-actions">
-                <a href="/login" className="v-btn nav-btn-ghost"><span>Login</span></a>
-                <a href="/signup" className="v-btn"><span>Sign Up</span></a>
+                <Link href="/login" className="v-btn nav-btn-ghost"><span>Login</span></Link>
+                <Link href="/signup" className="v-btn"><span>Sign Up</span></Link>
               </div>
             </div>
           </div>
@@ -437,7 +439,7 @@ export default function VertexLandingPage() {
           <div id="sub2" className="sub absolute">60+ languages, verifiable portfolios, and smart team matching.</div>
           
           {/* HERO CTA */}
-          <a href="/login" className="v-btn hero-cta"><span style={{position:'relative',zIndex:2,display:'block',lineHeight:1}}>Forge Your Legacy →</span></a>
+          <Link href="/signup" className="v-btn hero-cta"><span style={{position:'relative',zIndex:2,display:'block',lineHeight:1}}>Forge Your Legacy →</span></Link>
         </div>
         
         <div className="showcase">

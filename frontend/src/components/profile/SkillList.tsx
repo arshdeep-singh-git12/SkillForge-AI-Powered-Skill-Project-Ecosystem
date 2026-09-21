@@ -44,16 +44,16 @@ export default function SkillList({ userId }: SkillListProps) {
   };
 
   if (loading) {
-    return <div className="text-machined-400 font-mono text-sm animate-pulse">Loading skills...</div>;
+    return <div className="text-gray-400 font-sans text-sm animate-pulse text-center py-8">Loading skills...</div>;
   }
 
   return (
-    <div className="mt-12 bg-machined-800/80 backdrop-blur-xl border border-machined-600 rounded-2xl shadow-2xl p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold text-machined-100">Technical Skills</h2>
+    <div className="mt-8 interior-panel p-8 bg-white shadow-sm border border-gray-100">
+      <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+        <h2 className="text-2xl font-bold text-gray-900 font-sans">Technical Skills</h2>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-machined-700 hover:bg-machined-600 text-cyan border border-machined-500 font-mono text-sm py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
+          className="interior-pill interior-pill-active shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           Add Skill
@@ -61,7 +61,7 @@ export default function SkillList({ userId }: SkillListProps) {
       </div>
 
       {skills.length === 0 ? (
-        <p className="text-machined-400 font-mono text-sm text-center py-8 border border-dashed border-machined-600 rounded-lg">
+        <p className="text-gray-400 font-sans text-sm text-center py-8 border border-dashed border-gray-200 rounded-xl bg-gray-50">
           No skills added yet. Showcase your expertise!
         </p>
       ) : (

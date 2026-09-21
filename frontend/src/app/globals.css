@@ -160,28 +160,21 @@ html:has(body.no-scroll) {
    VERTEX UI - PIXEL CONTRACT A (THE BADGE)
 ===================================================================== */
 .v-badge {
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.115);
-  background: linear-gradient(to top,
-    rgba(190,225,255,.175) 0px, rgba(190,225,255,.128) 2px, rgba(190,225,255,.075) 4px,
-    rgba(190,225,255,.026) 6px, rgba(255,255,255,.012) 9px, rgba(255,255,255,.012) 100%);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   position: relative;
 }
 
 .v-badge-icon {
-  border-radius: 8px;
+  border-radius: 4px;
   display: grid;
   place-items: center;
-  background: linear-gradient(to top,
-    #46afc8 0px, #35abc7 2px, #0b859d 4px, #026c84 6px, #004e66 8px,
-    #053f58 10px, #012c3d 12px, #031a2a 14px, #061125 16px, #090f25 19px,
-    #090c1c 23px, #060d16 29px);
-  box-shadow: inset 1px 0 0 rgba(150,220,250,.40),
-    inset -1px 0 0 rgba(150,220,250,.52),
-    0 0 6px rgba(60,190,230,.20), 0 3px 8px -5px rgba(90,220,255,.6);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .v-badge-text {

@@ -2,13 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 import { getProjects, createProject } from '../../services/project.service';
 import ProjectModal from '../../components/dashboard/ProjectModal';
+import CompletionPopup from '../../components/dashboard/CompletionPopup';
 
 export default function DashboardPage() {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Force onboarding check
+  useEffect(() => {
+    if (!authLoading && user) {
+      if (!user.avatar || !user.bio) {
+        router.push('/onboarding');
+      }
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -132,6 +147,8 @@ export default function DashboardPage() {
         onClose={() => setIsModalOpen(false)} 
         onSubmit={handleAddProject} 
       />
+
+      <CompletionPopup />
     </div>
   );
 }

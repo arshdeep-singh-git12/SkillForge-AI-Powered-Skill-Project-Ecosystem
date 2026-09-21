@@ -20,6 +20,11 @@ export const getUserProfile = async (id: string) => {
   return response.data;
 };
 
+export const getProfileCompletion = async () => {
+  const response = await api.get('/users/profile/completion');
+  return response.data;
+};
+
 // --- Skill Endpoints ---
 
 export const getUserSkills = async (userId: string) => {
