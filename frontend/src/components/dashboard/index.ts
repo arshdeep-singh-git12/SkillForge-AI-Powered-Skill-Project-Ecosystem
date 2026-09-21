@@ -3,16 +3,22 @@
  *
  * Widgets and cards for the main dashboard view.
  *
- * Planned components:
- *   - SkillSummaryCard: Top skills overview
- *   - RecentProjectsCard: Latest project activity
- *   - AssessmentScoreCard: Recent assessment results
+ * Components:
+ *   - StatsOverview: Key metrics bar (Skills, Projects, Teams, Certs)
+ *   - QuickActions: Shortcut navigation buttons
+ *   - SkillSummaryCard: Top skills overview (pending module)
+ *   - RecentProjectsCard: Latest project activity (pending module)
+ *   - AssessmentScoreCard: Recent assessment results (pending module)
+ *   - TeamsSummaryCard: Teams the user is part of (live)
  *   - ActivityFeed: Timeline of user activity
- *   - StatsOverview: Key metrics (projects, skills, reviews)
  *
  * @owner Team Member 7 — Teams & Dashboard
  */
 
-// Export components as they are created:
-// export { default as SkillSummaryCard } from './SkillSummaryCard';
-// export { default as RecentProjectsCard } from './RecentProjectsCard';
+export { default as StatsOverview } from './StatsOverview';
+export { default as QuickActions } from './QuickActions';
+export { default as SkillSummaryCard } from './SkillSummaryCard';
+export { default as RecentProjectsCard } from './RecentProjectsCard';
+export { default as AssessmentScoreCard } from './AssessmentScoreCard';
+export { default as TeamsSummaryCard } from './TeamsSummaryCard';
+export { default as ActivityFeed } from './ActivityFeed';

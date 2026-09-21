@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillForge — Student Projects & AI Skill Verification</title>
+  <meta name="description" content="Explore real-world student projects with AI-verified skill profile ratings, technical tags, and project cards on SkillForge.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container nav-content">
+      <a href="#" class="brand-logo">
+        <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+        <div class="logo-text">Skill<span>Forge</span></div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active"><i class="fa-solid fa-diagram-project"></i> Student Projects</a></li>
+          <li><a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Skill Profiles</a></li>
+          <li><a href="#" class="nav-link"><i class="fa-solid fa-laptop-code"></i> AI Assessments</a></li>
+          <li><a href="#" class="nav-link"><i class="fa-solid fa-users"></i> Team Matcher</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-primary" onclick="openAddProjectModal()">
+          <i class="fa-solid fa-plus"></i> Submit Project
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section & Real-time Metrics -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        AI-Verified Student Showcase
+      </div>
+      <h1 class="hero-title">
+        Real Projects. Proven <span class="gradient-text">Skills</span>.
+      </h1>
+      <p class="hero-description">
+        Explore student portfolio projects evaluated by SkillForge AI. Every project card features verified tech stacks, code proficiency scores, and live demo links.
+      </p>
+
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-number" id="totalProjectsCount">6+</div>
+          <div class="metric-label">Completed Projects</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">94.8%</div>
+          <div class="metric-label">AI Accuracy Index</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">35+</div>
+          <div class="metric-label">Tech Tags Tracked</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">100%</div>
+          <div class="metric-label">Code Evaluated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter & Search Toolbar -->
+  <section class="toolbar-section">
+    <div class="container">
+      <div class="toolbar-card">
+        <div class="search-row">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by project title, tech tags (e.g., Python, React), or student name...">
+            <span class="search-shortcut">Ctrl K</span>
+          </div>
+
+          <div class="select-wrapper">
+            <select id="sortSelect">
+              <option value="newest">Sort by: Newest First</option>
+              <option value="popular">Sort by: Most Popular</option>
+              <option value="aiScore">Sort by: Highest AI Skill Score</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-tags-row">
+          <span class="filter-label"><i class="fa-solid fa-filter"></i> Category:</span>
+          <button class="tag-pill category-pill active" data-category="All">
+            All Projects
+          </button>
+          <button class="tag-pill category-pill" data-category="AI/ML">
+            <i class="fa-solid fa-robot"></i> AI / Machine Learning
+          </button>
+          <button class="tag-pill category-pill" data-category="Full Stack">
+            <i class="fa-solid fa-layer-group"></i> Full Stack & Web3
+          </button>
+          <button class="tag-pill category-pill" data-category="Systems">
+            <i class="fa-solid fa-microchip"></i> Systems & Robotics
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Grid Showcase -->
+  <main class="container">
+    <div class="projects-grid" id="projectsGrid">
+      <!-- Dynamic Project Cards Rendered via App.js -->
+    </div>
+  </main>
+
+  <!-- Project Details Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-container">
+      <div id="detailModalContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Project Modal -->
+  <div class="modal-overlay" id="addProjectModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title"><i class="fa-solid fa-cloud-arrow-up"></i> Submit Completed Student Project</h2>
+        <button class="btn-close-modal" onclick="closeModal('addProjectModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="newProjectForm">
+          <div class="form-group">
+            <label class="form-label" for="projTitle">Project Title</label>
+            <input type="text" id="projTitle" class="form-control" placeholder="e.g. Autonomous Robotic Arm Controller" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="projAuthor">Student Author Name</label>
+              <input type="text" id="projAuthor" class="form-control" placeholder="e.g. Alex Morgan" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="projCategory">Category</label>
+              <select id="projCategory" class="form-control">
+                <option value="AI/ML">AI / Machine Learning</option>
+                <option value="Full Stack">Full Stack & Web3</option>
+                <option value="Systems">Systems & Robotics</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="projTech">Tech Tags (comma separated)</label>
+            <input type="text" id="projTech" class="form-control" placeholder="e.g. Python, PyTorch, React, Java, Docker" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="projDesc">Project Description & Architecture Summary</label>
+            <textarea id="projDesc" class="form-control" placeholder="Describe key features, algorithms used, and problem solved..." required></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" class="btn-secondary" onclick="closeModal('addProjectModal')">Cancel</button>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Publish & Evaluate AI Score</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toast"></div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>

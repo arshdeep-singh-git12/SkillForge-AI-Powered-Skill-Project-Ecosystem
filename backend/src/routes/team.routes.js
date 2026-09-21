@@ -1,30 +1,36 @@
 /**
  * Team Routes
  * 
- * Manages team formation and membership.
- * Uses rule-based matching by skills and availability.
+ * Manages team formation, matching, and membership.
  * 
- * Planned endpoints:
- *   GET  /api/teams            — List all teams
- *   GET  /api/teams/:id        — Get team details
- *   POST /api/teams            — Create a new team
- *   POST /api/teams/match      — Find matching teams/members
- *   POST /api/teams/:id/join   — Join a team
- *   POST /api/teams/:id/leave  — Leave a team
+ * Endpoints:
+ *   GET    /api/teams          — List all teams (filtered & paginated)
+ *   POST   /api/teams/match    — Find matching teams by skills
+ *   GET    /api/teams/:id      — Get team details
+ *   POST   /api/teams          — Create a new team
+ *   PUT    /api/teams/:id      — Update team details (owner only)
+ *   DELETE /api/teams/:id      — Delete team (owner only)
+ *   POST   /api/teams/:id/join — Join a team
+ *   POST   /api/teams/:id/leave— Leave a team
  * 
  * @owner Team Member 7 — Teams & Dashboard
  */
 
 const express = require('express');
 const router = express.Router();
-// const teamController = require('../controllers/team.controller');
+const { protect } = require('../middleware/auth.middleware');
+const teamController = require('../controllers/team.controller');
 
-// TODO: Implement team routes
-// router.get('/', teamController.getAllTeams);
-// router.get('/:id', teamController.getTeamById);
-// router.post('/', authMiddleware, teamController.createTeam);
-// router.post('/match', authMiddleware, teamController.findMatches);
-// router.post('/:id/join', authMiddleware, teamController.joinTeam);
-// router.post('/:id/leave', authMiddleware, teamController.leaveTeam);
+// Public read routes
+router.get('/', teamController.getAllTeams);
+router.post('/match', protect, teamController.findMatches);
+router.get('/:id', teamController.getTeamById);
+
+// Protected mutating routes
+router.post('/', protect, teamController.createTeam);
+router.put('/:id', protect, teamController.updateTeam);
+router.delete('/:id', protect, teamController.deleteTeam);
+router.post('/:id/join', protect, teamController.joinTeam);
+router.post('/:id/leave', protect, teamController.leaveTeam);
 
 module.exports = router;

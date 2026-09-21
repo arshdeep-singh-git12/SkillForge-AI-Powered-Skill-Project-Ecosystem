@@ -3,16 +3,20 @@
  *
  * Components for the team formation feature.
  *
- * Planned components:
- *   - TeamCard: Team name, members, required skills
- *   - CreateTeamForm: Form to create new team
- *   - MatchResults: Display matching teams/members
+ * Components:
+ *   - TeamCard: Team name, members, required skills, actions
+ *   - TeamFilters: Search/filter bar for teams listing
+ *   - CreateTeamForm: Modal form to create new team
+ *   - MatchResults: Skill-matching interface with results
+ *   - SkillMatcher: Visual skill match display
  *   - MemberList: List of team members with roles
- *   - SkillMatcher: Visual skill matching display
  *
  * @owner Team Member 7 — Teams & Dashboard
  */
 
-// Export components as they are created:
-// export { default as TeamCard } from './TeamCard';
-// export { default as CreateTeamForm } from './CreateTeamForm';
+export { default as TeamCard } from './TeamCard';
+export { default as TeamFilters } from './TeamFilters';
+export { default as CreateTeamForm } from './CreateTeamForm';
+export { default as MatchResults } from './MatchResults';
+export { default as SkillMatcher } from './SkillMatcher';
+export { default as MemberList } from './MemberList';
