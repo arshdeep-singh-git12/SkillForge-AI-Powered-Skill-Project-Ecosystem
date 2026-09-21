@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { getCertifications, addExternalCertification } from '../../services/certification.service';
+import React, { useEffect, useState, useRef } from 'react';
+import { getCertifications, addExternalCertification, uploadLinkedinPdf } from '../../services/certification.service';
 import CertificationModal from '../../components/certifications/CertificationModal';
 
 export default function CertificationsPage() {
   const [certifications, setCertifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploadingPdf, setIsUploadingPdf] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchCerts = async () => {
@@ -33,6 +35,28 @@ export default function CertificationsPage() {
     }
   };
 
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPdf(true);
+
+    try {
+      const data = await uploadLinkedinPdf(file);
+      // Reload certificates
+      const newCerts = await getCertifications();
+      setCertifications(newCerts);
+      alert(data.message);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to parse LinkedIn PDF');
+    } finally {
+      setIsUploadingPdf(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const internalTrophies = certifications.filter(c => c.type === 'assessment');
   const externalCerts = certifications.filter(c => c.type === 'external');
 
@@ -47,13 +71,30 @@ export default function CertificationsPage() {
           <p className="interior-text font-sans text-sm">Showcase your achievements, trophies, and external credentials.</p>
         </div>
         
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="interior-pill interior-pill-active shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-          Add External Certificate
-        </button>
+        <div className="flex gap-4">
+          <input 
+            type="file" 
+            accept=".pdf" 
+            className="hidden" 
+            ref={fileInputRef}
+            onChange={handlePdfUpload}
+          />
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploadingPdf}
+            className="interior-pill bg-[#0a66c2] text-white hover:bg-[#004182] border-transparent shadow-md flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-70"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            {isUploadingPdf ? 'Parsing PDF...' : 'Sync LinkedIn via PDF'}
+          </button>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="interior-pill interior-pill-active shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+            Add External Certificate
+          </button>
+        </div>
       </div>
 
       {loading ? (

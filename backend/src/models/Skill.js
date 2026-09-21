@@ -45,6 +45,14 @@ const skillSchema = new mongoose.Schema(
       max: [100, 'Proficiency cannot exceed 100'],
       default: 0,
     },
+    assessmentSources: [
+      {
+        sourceType: { type: String, enum: ['challenge', 'certificate', 'project'] },
+        sourceId: { type: mongoose.Schema.Types.ObjectId },
+        awardedScore: { type: Number },
+        evaluatedAt: { type: Date, default: Date.now }
+      }
+    ]
   },
   {
     timestamps: true,

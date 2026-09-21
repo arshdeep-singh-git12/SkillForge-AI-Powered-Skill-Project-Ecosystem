@@ -1,4 +1,7 @@
 const User = require('../models/User');
+const Project = require('../models/Project');
+const Skill = require('../models/Skill');
+const Certification = require('../models/Certification');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -11,7 +14,7 @@ const generateToken = (id) => {
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, githubUrl, linkedinUrl } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -26,6 +29,8 @@ const register = async (req, res) => {
       name,
       email,
       passwordHash: password,
+      githubUrl,
+      linkedinUrl
     });
 
     if (user) {
@@ -103,4 +108,31 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getMe };
+const resetTestAccount = async (req, res) => {
+  try {
+    const testEmail = 'test@example.com';
+    const user = await User.findOne({ email: testEmail });
+    
+    if (user) {
+      await Project.deleteMany({ owner: user._id });
+      await Skill.deleteMany({ user: user._id });
+      await Certification.deleteMany({ user: user._id });
+      await User.deleteOne({ _id: user._id });
+    }
+
+    // Recreate the user
+    await User.create({
+      name: 'Test User',
+      email: testEmail,
+      passwordHash: 'password123',
+      githubUrl: 'https://github.com/test',
+      linkedinUrl: 'https://linkedin.com/in/test'
+    });
+
+    res.json({ message: 'Test account and all associated data have been completely reset!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error during reset', error: error.message });
+  }
+};
+
+module.exports = { register, login, logout, getMe, resetTestAccount };

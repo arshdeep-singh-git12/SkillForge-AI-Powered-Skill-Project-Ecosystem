@@ -1,8 +1,18 @@
 const Project = require('../models/Project');
+const { processProject } = require('../services/assessment-engine.service');
 
 const getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find().populate('owner', 'name avatar').sort({ createdAt: -1 });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+const getUserProjects = async (req, res) => {
+  try {
+    const projects = await Project.find({ owner: req.params.userId }).populate('owner', 'name avatar').sort({ createdAt: -1 });
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -28,6 +38,10 @@ const createProject = async (req, res) => {
     });
 
     const populatedProject = await Project.findById(project._id).populate('owner', 'name avatar');
+    
+    // Automatically assess skills based on the new project's tech stack
+    await processProject(req.user.id, project._id);
+
     res.status(201).json(populatedProject);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -44,4 +58,4 @@ const getProjectById = async (req, res) => {
   }
 };
 
-module.exports = { getAllProjects, createProject, getProjectById };
+module.exports = { getAllProjects, getUserProjects, createProject, getProjectById };

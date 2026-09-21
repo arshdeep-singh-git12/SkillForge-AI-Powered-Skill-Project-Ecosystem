@@ -71,6 +71,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    githubUrl: {
+      type: String,
+      default: '',
+    },
+    linkedinUrl: {
+      type: String,
+      default: '',
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],

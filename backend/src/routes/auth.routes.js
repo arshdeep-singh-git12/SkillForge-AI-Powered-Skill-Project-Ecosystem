@@ -25,6 +25,7 @@ const handleOAuthCallback = (req, res) => {
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
+router.post('/reset-test-account', authController.resetTestAccount);
 router.get('/me', protect, authController.getMe);
 
 // Google OAuth

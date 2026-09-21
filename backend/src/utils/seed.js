@@ -1,4 +1,5 @@
 const Assessment = require('../models/Assessment');
+const User = require('../models/User');
 
 const seedAssessments = async () => {
   try {
@@ -62,4 +63,25 @@ const seedAssessments = async () => {
   }
 };
 
-module.exports = { seedAssessments };
+const seedUsers = async () => {
+  try {
+    const count = await User.countDocuments();
+    if (count > 0) {
+      console.log('✅ Users already seeded.');
+      return;
+    }
+
+    console.log('🌱 Seeding default test user...');
+    await User.create({
+      name: 'Test User',
+      email: 'test@example.com',
+      passwordHash: 'password123'
+    });
+    console.log('✅ Successfully seeded default test user (test@example.com / password123)');
+  } catch (error) {
+    console.error('❌ Failed to seed users:', error.message);
+  }
+};
+
+module.exports = { seedAssessments, seedUsers };
+

@@ -2,6 +2,8 @@ const User = require('../models/User');
 const Skill = require('../models/Skill');
 const Project = require('../models/Project');
 const Certification = require('../models/Certification');
+const { syncGithubProjects } = require('../services/github.service');
+const { syncLinkedinCertificates } = require('../services/linkedin.service');
 
 const getUserById = async (req, res) => {
   try {
@@ -18,6 +20,8 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    console.log('PUT /api/users/profile - user ID:', req.user?.id);
+    console.log('PUT /api/users/profile - body:', req.body);
     const user = await User.findById(req.user.id);
 
     if (user) {
@@ -26,14 +30,27 @@ const updateUser = async (req, res) => {
       if (req.body.avatar !== undefined) {
         user.avatar = req.body.avatar;
       }
+      if (req.body.githubUrl !== undefined) {
+        user.githubUrl = req.body.githubUrl;
+      }
+      if (req.body.linkedinUrl !== undefined) {
+        user.linkedinUrl = req.body.linkedinUrl;
+      }
       
       const updatedUser = await user.save();
+      console.log('Profile updated successfully for user:', updatedUser._id);
+      
+      // Fire and forget background syncs
+      syncGithubProjects(updatedUser).catch(e => console.error(e));
+      syncLinkedinCertificates(updatedUser).catch(e => console.error(e));
 
       res.json(updatedUser);
     } else {
+      console.log('User not found in DB:', req.user.id);
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
+    console.error('Error in updateUser:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

@@ -86,7 +86,7 @@ export default function CertificationModal({ isOpen, onClose, onSubmit }: Certif
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Credential / Verification URL</label>
+            <label className="text-sm font-medium text-gray-700 block">Credential / Verification URL (Optional)</label>
             <input 
               type="url" 
               value={credentialUrl}

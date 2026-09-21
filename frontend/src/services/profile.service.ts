@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-export const updateProfile = async (profileData: { name?: string; bio?: string; avatar?: string }) => {
+export const updateProfile = async (profileData: { name?: string; bio?: string; avatar?: string; githubUrl?: string; linkedinUrl?: string }) => {
   const response = await api.put('/users/profile', profileData);
   return response.data;
 };

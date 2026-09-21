@@ -11,7 +11,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { connectDB } = require('./config/db');
-const { seedAssessments } = require('./utils/seed');
+const { seedAssessments, seedUsers } = require('./utils/seed');
 const passport = require('./config/passport');
 const session = require('express-session');
 const { PORT, NODE_ENV } = require('./config/env');
@@ -71,6 +71,7 @@ const startServer = async () => {
       try {
         await connectDB();
         await seedAssessments();
+        await seedUsers();
         global.isDbReady = true;
       } catch (err) {
         console.error('⚠️  Failed to connect to MongoDB. API will run, but database features will fail.');

@@ -1,4 +1,5 @@
 const Certification = require('../models/Certification');
+const { processCertification } = require('../services/assessment-engine.service');
 
 const getUserCertifications = async (req, res) => {
   try {
@@ -26,6 +27,9 @@ const addExternalCertification = async (req, res) => {
       credentialUrl,
       type: 'external'
     });
+
+    // Automatically assess skills based on this new certification
+    await processCertification(req.user.id, certification._id);
 
     res.status(201).json(certification);
   } catch (error) {

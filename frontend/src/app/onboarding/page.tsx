@@ -23,6 +23,8 @@ export default function OnboardingPage() {
   
   const [selectedAvatar, setSelectedAvatar] = useState(PRESET_AVATARS[0]);
   const [bio, setBio] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -40,13 +42,14 @@ export default function OnboardingPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const updatedUser = await updateProfile({ avatar: selectedAvatar, bio });
+      const updatedUser = await updateProfile({ avatar: selectedAvatar, bio, githubUrl, linkedinUrl });
       // Update local auth context
       setUser(updatedUser);
       router.push('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update profile during onboarding', error);
-      alert('Failed to save profile. Please try again.');
+      const errorMsg = error.response?.data?.message || error.message || 'Failed to save profile. Please try again.';
+      alert('Error: ' + errorMsg);
       setIsSubmitting(false);
     }
   };
@@ -126,6 +129,42 @@ export default function OnboardingPage() {
                 ></textarea>
                 <div className="text-right text-xs text-gray-400">
                   {bio.length} / 500 characters
+                </div>
+              </div>
+
+              {/* GitHub Link */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900 block" htmlFor="githubUrl">
+                  GitHub Profile URL
+                </label>
+                <div className="relative">
+                  <input
+                    id="githubUrl"
+                    type="url"
+                    value={githubUrl}
+                    onChange={(e) => setGithubUrl(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors shadow-sm"
+                    placeholder="https://github.com/username"
+                  />
+                </div>
+              </div>
+
+              {/* LinkedIn Link */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900 block" htmlFor="linkedinUrl">
+                  LinkedIn Profile URL
+                </label>
+                <div className="relative">
+                  <input
+                    id="linkedinUrl"
+                    type="url"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                    required
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors shadow-sm"
+                    placeholder="https://linkedin.com/in/username"
+                  />
                 </div>
               </div>
 
