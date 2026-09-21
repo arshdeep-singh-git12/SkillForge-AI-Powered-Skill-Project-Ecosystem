@@ -12,7 +12,8 @@
 import { useState } from 'react';
 import type { Team } from '@/types';
 import { formatDate, truncate, getInitials } from '@/lib/utils';
-import { teamService } from '@/services/team.service';
+import { teamService, DEV_USER_ID } from '@/services/team.service';
+import PendingRequestsModal from './PendingRequestsModal';
 
 const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
   recruiting: { label: 'RECRUITING', color: 'text-[#0cbde8]', bg: 'bg-[#0cbde8]/10' },
@@ -40,10 +41,20 @@ export default function TeamCard({ team, onRefresh, showActions = true }: TeamCa
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
 
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
+
   const status = statusConfig[team.status] || statusConfig.archived;
   const memberCount = team.members?.length || 0;
   const isFull = memberCount >= team.maxMembers;
-  const canJoin = team.status === 'recruiting' && !isFull;
+  const isOwner = team.owner?.id === DEV_USER_ID || team.owner?._id === DEV_USER_ID;
+  const pendingCount = team.joinRequests?.length || 0;
+  const isMember = team.members?.some(
+    (m) => m.user?.id === DEV_USER_ID || m.user?._id === DEV_USER_ID
+  );
+  const hasRequested = team.joinRequests?.some(
+    (r) => r.user?.id === DEV_USER_ID || r.user?._id === DEV_USER_ID || (r.user as any) === DEV_USER_ID
+  );
+  const canJoin = team.status === 'recruiting' && !isFull && !isMember && !hasRequested;
 
   const handleJoin = async () => {
     setError(null);
@@ -183,16 +194,31 @@ export default function TeamCard({ team, onRefresh, showActions = true }: TeamCa
                   disabled={joining}
                   className="btn-primary text-[10px] px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {joining ? 'Joining...' : 'Join Team'}
+                  {joining ? 'Requesting...' : 'Request to Join'}
                 </button>
               )}
-              <button
-                onClick={handleLeave}
-                disabled={leaving}
-                className="btn-secondary text-[10px] px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {leaving ? 'Leaving...' : 'Leave'}
-              </button>
+              {hasRequested && (
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm text-[#f5b922] bg-[#f5b922]/10 border border-[#f5b922]/20">
+                  Request Pending
+                </span>
+              )}
+              {isMember && (
+                <button
+                  onClick={handleLeave}
+                  disabled={leaving}
+                  className="btn-secondary text-[10px] px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {leaving ? 'Leaving...' : 'Leave'}
+                </button>
+              )}
+              {isOwner && (
+                <button
+                  onClick={() => setShowRequestsModal(true)}
+                  className="btn-secondary text-[10px] px-3 py-1.5"
+                >
+                  Requests {pendingCount > 0 ? `(${pendingCount})` : ''}
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -200,6 +226,13 @@ export default function TeamCard({ team, onRefresh, showActions = true }: TeamCa
           <p className="font-mono text-[10px] text-red-400 mt-2">{error}</p>
         )}
       </div>
+
+      <PendingRequestsModal
+        isOpen={showRequestsModal}
+        onClose={() => setShowRequestsModal(false)}
+        teamId={team.id || team._id || ''}
+        onUpdated={() => onRefresh?.()}
+      />
     </div>
   );
 }

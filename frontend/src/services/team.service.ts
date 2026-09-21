@@ -8,7 +8,7 @@
  */
 
 import api from './api';
-import type { Team, TeamMatchResult, PaginatedResponse, ApiResponse } from '@/types';
+import type { Team, TeamMatchResult, PaginatedResponse, ApiResponse, JoinRequest } from '@/types';
 
 // ──────────────────────────────────────────────
 // DEV ONLY — Scoped auth workaround
@@ -16,7 +16,7 @@ import type { Team, TeamMatchResult, PaginatedResponse, ApiResponse } from '@/ty
 // when the auth system is not yet implemented.
 // Remove this block once real authentication is integrated.
 // ──────────────────────────────────────────────
-const DEV_USER_ID = '000000000000000000000001';
+export const DEV_USER_ID = '000000000000000000000001';
 
 function getDevHeaders(): Record<string, string> {
   if (process.env.NODE_ENV === 'development') {
@@ -140,6 +140,39 @@ export const teamService = {
    */
   leaveTeam: async (teamId: string): Promise<ApiResponse<Team>> => {
     const response = await api.post(`/teams/${teamId}/leave`, {}, {
+      headers: getDevHeaders(),
+    });
+    return response.data;
+  },
+
+  /**
+   * Get pending join requests for a team (Owner only).
+   * GET /api/teams/:id/requests
+   */
+  getJoinRequests: async (teamId: string): Promise<{ data: JoinRequest[] }> => {
+    const response = await api.get(`/teams/${teamId}/requests`, {
+      headers: getDevHeaders(),
+    });
+    return response.data;
+  },
+
+  /**
+   * Approve a join request.
+   * POST /api/teams/:id/requests/:userId/approve
+   */
+  approveJoinRequest: async (teamId: string, userId: string): Promise<ApiResponse<null>> => {
+    const response = await api.post(`/teams/${teamId}/requests/${userId}/approve`, {}, {
+      headers: getDevHeaders(),
+    });
+    return response.data;
+  },
+
+  /**
+   * Reject a join request.
+   * POST /api/teams/:id/requests/:userId/reject
+   */
+  rejectJoinRequest: async (teamId: string, userId: string): Promise<ApiResponse<null>> => {
+    const response = await api.post(`/teams/${teamId}/requests/${userId}/reject`, {}, {
       headers: getDevHeaders(),
     });
     return response.data;

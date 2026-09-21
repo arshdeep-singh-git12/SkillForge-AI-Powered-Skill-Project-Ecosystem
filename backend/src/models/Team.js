@@ -63,6 +63,19 @@ const teamSchema = new mongoose.Schema(
       required: [true, 'Team must have an owner'],
     },
     members: [memberSchema],
+    joinRequests: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+        requestedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     requiredSkills: [
       {
         type: String,
@@ -135,6 +148,24 @@ teamSchema.methods.isMember = function (userId) {
       ? member.user._id.toString()
       : member.user.toString();
     return memberUserId === uid;
+  });
+};
+
+/**
+ * Checks if a given userId has already requested to join the team.
+ * 
+ * @param {string|mongoose.Types.ObjectId} userId
+ * @returns {boolean}
+ */
+teamSchema.methods.hasRequestedJoin = function (userId) {
+  if (!userId) return false;
+  const uid = userId.toString();
+  return (this.joinRequests || []).some((req) => {
+    if (!req.user) return false;
+    const reqUserId = req.user._id
+      ? req.user._id.toString()
+      : req.user.toString();
+    return reqUserId === uid;
   });
 };
 

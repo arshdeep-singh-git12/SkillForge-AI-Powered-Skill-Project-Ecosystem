@@ -91,13 +91,25 @@ export interface Review {
 
 // ============ Team Types ============
 
+export interface TeamMember {
+  user: PopulatedUser;
+  role: 'owner' | 'admin' | 'lead' | 'member';
+  joinedAt: string;
+}
+
+export interface JoinRequest {
+  user: PopulatedUser;
+  requestedAt: string;
+}
+
 export interface Team {
-  id: string;
+  id?: string;
   _id?: string;
   name: string;
   description: string;
   owner: PopulatedUser;
   members: TeamMember[];
+  joinRequests?: JoinRequest[];
   requiredSkills: string[];
   maxMembers: number;
   status: 'recruiting' | 'active' | 'completed' | 'archived';
@@ -108,11 +120,7 @@ export interface Team {
   updatedAt: string;
 }
 
-export interface TeamMember {
-  user: PopulatedUser;
-  role: 'owner' | 'admin' | 'lead' | 'member';
-  joinedAt: string;
-}
+
 
 // Populated sub-document shapes (from backend .populate() calls)
 export interface PopulatedUser {

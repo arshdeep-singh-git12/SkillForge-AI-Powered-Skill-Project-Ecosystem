@@ -10,8 +10,11 @@
  *   POST   /api/teams          — Create a new team
  *   PUT    /api/teams/:id      — Update team details (owner only)
  *   DELETE /api/teams/:id      — Delete team (owner only)
- *   POST   /api/teams/:id/join — Join a team
+ *   POST   /api/teams/:id/join — Request to join a team
  *   POST   /api/teams/:id/leave— Leave a team
+ *   GET    /api/teams/:id/requests — Get join requests (owner only)
+ *   POST   /api/teams/:id/requests/:userId/approve — Approve request (owner only)
+ *   POST   /api/teams/:id/requests/:userId/reject  — Reject request (owner only)
  * 
  * @owner Team Member 7 — Teams & Dashboard
  */
@@ -32,5 +35,10 @@ router.put('/:id', protect, teamController.updateTeam);
 router.delete('/:id', protect, teamController.deleteTeam);
 router.post('/:id/join', protect, teamController.joinTeam);
 router.post('/:id/leave', protect, teamController.leaveTeam);
+
+// Request management routes (owner only logic enforced in controller)
+router.get('/:id/requests', protect, teamController.getJoinRequests);
+router.post('/:id/requests/:userId/approve', protect, teamController.approveJoinRequest);
+router.post('/:id/requests/:userId/reject', protect, teamController.rejectJoinRequest);
 
 module.exports = router;

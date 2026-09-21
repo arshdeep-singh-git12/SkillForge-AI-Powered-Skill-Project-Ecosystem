@@ -9,7 +9,10 @@
 
 const mongoose = require('mongoose');
 const Team = require('../models/Team');
+require('../models/User'); // Ensure User model is registered for populate() refs
+require('../models/Project'); // Ensure Project model is registered for populate() refs
 const matchingService = require('../services/matching.service');
+const { NODE_ENV } = require('../config/env');
 
 /**
  * Helper to get authenticated user ID.
@@ -23,7 +26,7 @@ const getAuthUserId = (req) => {
   if (req.user && (req.user.id || req.user._id)) {
     return (req.user.id || req.user._id).toString();
   }
-  if (process.env.NODE_ENV === 'development' && req.headers['x-dev-user-id']) {
+  if (NODE_ENV === 'development' && req.headers['x-dev-user-id']) {
     return req.headers['x-dev-user-id'].toString().trim();
   }
   return null;
@@ -470,10 +473,16 @@ const joinTeam = async (req, res, next) => {
       });
     }
 
-    team.members.push({
+    if (team.hasRequestedJoin(userId)) {
+      return res.status(409).json({
+        status: 'error',
+        message: 'You have already requested to join this team',
+      });
+    }
+
+    team.joinRequests.push({
       user: userId,
-      role: 'member',
-      joinedAt: new Date(),
+      requestedAt: new Date(),
     });
 
     await team.save();
@@ -485,7 +494,7 @@ const joinTeam = async (req, res, next) => {
 
     return res.status(200).json({
       status: 'success',
-      message: 'Successfully joined team',
+      message: 'Successfully requested to join team',
       data: populatedTeam.toJSON(),
     });
   } catch (error) {
@@ -562,6 +571,137 @@ const leaveTeam = async (req, res, next) => {
   }
 };
 
+/**
+ * Get join requests for a team (owner only).
+ * GET /api/teams/:id/requests
+ */
+const getJoinRequests = async (req, res, next) => {
+  try {
+    const userId = getAuthUserId(req);
+    if (!userId) {
+      return res.status(401).json({ status: 'error', message: 'Authentication required' });
+    }
+
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid team ID format' });
+    }
+
+    const team = await Team.findById(id).populate('joinRequests.user', 'name email avatar');
+    if (!team) {
+      return res.status(404).json({ status: 'error', message: 'Team not found' });
+    }
+
+    const ownerId = team.owner?._id ? team.owner._id.toString() : team.owner.toString();
+    if (ownerId !== userId) {
+      return res.status(403).json({ status: 'error', message: 'Only team owner can view requests' });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      data: team.joinRequests || [],
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Approve a join request (owner only).
+ * POST /api/teams/:id/requests/:userId/approve
+ */
+const approveJoinRequest = async (req, res, next) => {
+  try {
+    const userId = getAuthUserId(req);
+    if (!userId) {
+      return res.status(401).json({ status: 'error', message: 'Authentication required' });
+    }
+
+    const { id, userId: requestUserId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(requestUserId)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid ID format' });
+    }
+
+    const team = await Team.findById(id);
+    if (!team) {
+      return res.status(404).json({ status: 'error', message: 'Team not found' });
+    }
+
+    const ownerId = team.owner?._id ? team.owner._id.toString() : team.owner.toString();
+    if (ownerId !== userId) {
+      return res.status(403).json({ status: 'error', message: 'Only team owner can approve requests' });
+    }
+
+    if (team.isFull()) {
+      return res.status(400).json({ status: 'error', message: 'Team has reached its maximum capacity' });
+    }
+
+    if (team.isMember(requestUserId)) {
+      return res.status(409).json({ status: 'error', message: 'User is already a member' });
+    }
+
+    const requestIndex = team.joinRequests.findIndex((req) => req.user.toString() === requestUserId);
+    if (requestIndex === -1) {
+      return res.status(404).json({ status: 'error', message: 'Join request not found' });
+    }
+
+    // Move from requests to members
+    team.joinRequests.splice(requestIndex, 1);
+    team.members.push({
+      user: requestUserId,
+      role: 'member',
+      joinedAt: new Date(),
+    });
+
+    await team.save();
+
+    return res.status(200).json({ status: 'success', message: 'Request approved successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Reject a join request (owner only).
+ * POST /api/teams/:id/requests/:userId/reject
+ */
+const rejectJoinRequest = async (req, res, next) => {
+  try {
+    const userId = getAuthUserId(req);
+    if (!userId) {
+      return res.status(401).json({ status: 'error', message: 'Authentication required' });
+    }
+
+    const { id, userId: requestUserId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(requestUserId)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid ID format' });
+    }
+
+    const team = await Team.findById(id);
+    if (!team) {
+      return res.status(404).json({ status: 'error', message: 'Team not found' });
+    }
+
+    const ownerId = team.owner?._id ? team.owner._id.toString() : team.owner.toString();
+    if (ownerId !== userId) {
+      return res.status(403).json({ status: 'error', message: 'Only team owner can reject requests' });
+    }
+
+    const requestIndex = team.joinRequests.findIndex((req) => req.user.toString() === requestUserId);
+    if (requestIndex === -1) {
+      return res.status(404).json({ status: 'error', message: 'Join request not found' });
+    }
+
+    // Remove request
+    team.joinRequests.splice(requestIndex, 1);
+    await team.save();
+
+    return res.status(200).json({ status: 'success', message: 'Request rejected successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllTeams,
   getTeamById,
@@ -571,4 +711,7 @@ module.exports = {
   findMatches,
   joinTeam,
   leaveTeam,
+  getJoinRequests,
+  approveJoinRequest,
+  rejectJoinRequest,
 };

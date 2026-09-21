@@ -24,7 +24,7 @@ import type { FilterValues } from '@/components/teams/TeamFilters';
 import CreateTeamForm from '@/components/teams/CreateTeamForm';
 import MatchResults from '@/components/teams/MatchResults';
 
-type TabType = 'browse' | 'match';
+type TabType = 'browse' | 'match' | 'teammates';
 
 export default function TeamsPage() {
   const [activeTab, setActiveTab] = useState<TabType>('browse');
@@ -119,6 +119,16 @@ export default function TeamsPage() {
             }`}
           >
             Find Matches
+          </button>
+          <button
+            onClick={() => setActiveTab('teammates')}
+            className={`font-mono text-xs uppercase tracking-wider px-4 py-2.5 transition-colors border-b-2 ${
+              activeTab === 'teammates'
+                ? 'text-[#0cbde8] border-[#0cbde8]'
+                : 'text-[#7a889b] border-transparent hover:text-[#eaedf0]'
+            }`}
+          >
+            Find Teammates
           </button>
         </div>
 
@@ -232,6 +242,22 @@ export default function TeamsPage() {
         {/* Match Tab */}
         {activeTab === 'match' && (
           <MatchResults onRefresh={fetchTeams} />
+        )}
+
+        {/* Teammates Tab */}
+        {activeTab === 'teammates' && (
+          <div className="card border-[#2d333b] text-center py-16">
+            <div className="text-4xl mb-4">👤</div>
+            <h2 className="font-sans font-bold text-xl text-[#eaedf0] mb-2">
+              Individual Teammate Matching
+            </h2>
+            <p className="text-sm text-[#7a889b] max-w-md mx-auto mb-6">
+              Finding individual teammates based on actual skills is temporarily disabled while the <strong>Skill Profiles</strong> module is being completed.
+            </p>
+            <span className="font-mono text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm bg-[#0cbde8]/10 text-[#0cbde8] border border-[#0cbde8]/20">
+              Coming Soon
+            </span>
+          </div>
         )}
 
         {/* Create Team Modal */}
