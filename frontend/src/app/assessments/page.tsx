@@ -1,22 +1,22 @@
-"use client";
+'use client';
 import React, { useState } from 'react';
 
 // Yuvraj Sharma UI Component: Coding Challenges Sandbox Workspace
 export function CodingSandbox() {
-    const [userCode, setUserCode] = useState("# Write your Python or C++ solution here\nprint('SkillForge Active')");
-    const [lang, setLang] = useState("python");
-    const [terminalOutput, setTerminalOutput] = useState("");
+    const [userCode, setUserCode] = useState('# Write your Python or C++ solution here\nprint(\'SkillForge Active\')');
+    const [lang, setLang] = useState('python');
+    const [terminalOutput, setTerminalOutput] = useState('');
     const [isRunning, setIsRunning] = useState(false);
 
     const triggerCodeExecution = async () => {
         setIsRunning(true);
-        setTerminalOutput("Connecting to sandboxed execution environment...");
+        setTerminalOutput('Connecting to sandboxed execution environment...');
         try {
             // Hit our freshly configured backend assessment router endpoint
             const response = await fetch('/api/assessments/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ language: lang, code: userCode })
+                body: JSON.stringify({ language: lang, code: userCode }),
             });
             const result = await response.json();
             
@@ -24,10 +24,10 @@ export function CodingSandbox() {
                 // Prioritize standard error output if runtime syntax breaks
                 setTerminalOutput(result.stderr || result.output);
             } else {
-                setTerminalOutput("Engine error: " + result.error);
+                setTerminalOutput('Engine error: ' + result.error);
             }
         } catch (err) {
-            setTerminalOutput("Network fail: " + err.message);
+            setTerminalOutput('Network fail: ' + err.message);
         }
         setIsRunning(false);
     };
@@ -53,7 +53,7 @@ export function CodingSandbox() {
             />
 
             <button onClick={triggerCodeExecution} disabled={isRunning} style={{ marginTop: '14px', padding: '10px 24px', backgroundColor: '#238636', color: '#ffffff', fontWeight: '6px', borderRadius: '6px', border: 'none', cursor: isRunning ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
-                {isRunning ? "Compiling..." : "Run Code Tests"}
+                {isRunning ? 'Compiling...' : 'Run Code Tests'}
             </button>
 
             <div style={{ marginTop: '24px', backgroundColor: '#010409', padding: '16px', borderRadius: '8px', border: '1px solid #30363d', minHeight: '100px' }}>

@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://yuvrajcgcu_db_user:0011_Yuvraj@cluster0.dr5devz.mongodb.net/skillforge?retryWrites=true&w=majority", {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://yuvrajcgcu_db_user:0011_Yuvraj@cluster0.dr5devz.mongodb.net/skillforge?retryWrites=true&w=majority', {
       // Mongoose 7+ uses these defaults, but being explicit:
       // useNewUrlParser and useUnifiedTopology are no longer needed in Mongoose 7+
     });
