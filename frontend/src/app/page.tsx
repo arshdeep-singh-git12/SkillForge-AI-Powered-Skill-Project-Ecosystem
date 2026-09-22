@@ -6,8 +6,12 @@ export default function EliteHomePage() {
   const [apiStatus, setApiStatus] = useState<{ connected: boolean; timestamp?: string }>({
     connected: false
   });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    setApiStatus({ connected: true, timestamp: new Date().toISOString() });
+
     fetch('/api/assessments/problems')
       .then((res) => {
         if (res.ok) {
@@ -40,9 +44,17 @@ export default function EliteHomePage() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-xs text-[#7a889b]">
-            <span>LATENCY: <strong className="text-[#eaedf0]">12ms</strong></span>
-            <span>OPTIMISM STATE: <strong className="text-emerald-400">VERIFIED ACTIVE</strong></span>
+            <span className="hidden sm:inline">LATENCY: <strong className="text-[#eaedf0]">12ms</strong></span>
+            <span className="hidden sm:inline">OPTIMISM STATE: <strong className="text-emerald-400">VERIFIED ACTIVE</strong></span>
             <span className="hidden md:inline">CLUSTER: <strong className="text-[#0cbde8]">GLOBAL-EDGE</strong></span>
+            
+            {/* Login Action Button */}
+            <Link 
+              href="/login" 
+              className="px-3 py-1.5 rounded-md bg-[#0cbde8]/10 hover:bg-[#0cbde8]/20 border border-[#0cbde8]/30 text-[#0cbde8] font-bold uppercase transition-all tracking-wider shadow-sm"
+            >
+              Login &rarr;
+            </Link>
           </div>
         </header>
 
@@ -85,7 +97,6 @@ export default function EliteHomePage() {
         {/* Graphical Telemetry Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Graphical Chart Widget 1: Pass Tolerance */}
           <div className="glass-card glass-card-hover p-6 rounded-2xl space-y-4 flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <div>
@@ -94,7 +105,6 @@ export default function EliteHomePage() {
               </div>
               <span className="font-mono text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">OPTIMAL</span>
             </div>
-            {/* SVG Graphical Bar Chart */}
             <div className="space-y-2 pt-2">
               <div className="flex justify-between text-[10px] font-mono text-[#7a889b]">
                 <span>TOLERANCE BOUNDS</span>
@@ -106,7 +116,6 @@ export default function EliteHomePage() {
             </div>
           </div>
 
-          {/* Graphical Chart Widget 2: Sandbox Speed */}
           <div className="glass-card glass-card-hover p-6 rounded-2xl space-y-4 flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <div>
@@ -115,7 +124,6 @@ export default function EliteHomePage() {
               </div>
               <span className="font-mono text-[10px] text-sky-400 bg-sky-950/60 border border-sky-800 px-2 py-0.5 rounded">REAL-TIME</span>
             </div>
-            {/* SVG Speed Line Chart simulation */}
             <div className="space-y-2 pt-2">
               <div className="flex justify-between text-[10px] font-mono text-[#7a889b]">
                 <span>AVG CONTAINER SPIN-UP</span>
@@ -127,7 +135,6 @@ export default function EliteHomePage() {
             </div>
           </div>
 
-          {/* Graphical Chart Widget 3: Multi-Engine Load */}
           <div className="glass-card glass-card-hover p-6 rounded-2xl space-y-4 flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <div>
@@ -136,7 +143,6 @@ export default function EliteHomePage() {
               </div>
               <span className="font-mono text-[10px] text-blue-400 bg-blue-950/60 border border-blue-800 px-2 py-0.5 rounded">GCC/PY</span>
             </div>
-            {/* Multi-Engine split visual bar */}
             <div className="space-y-2 pt-2">
               <div className="flex justify-between text-[10px] font-mono text-[#7a889b]">
                 <span>Python / C / C++ Split</span>
@@ -162,7 +168,6 @@ export default function EliteHomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            
             <div className="glass-card glass-card-hover p-5 rounded-2xl space-y-3 border-l-4 border-l-emerald-500">
               <div className="flex justify-between items-center">
                 <span className="font-mono text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">TIER I</span>
@@ -218,7 +223,6 @@ export default function EliteHomePage() {
                 Start Apex Track &rarr;
               </Link>
             </div>
-
           </div>
         </div>
 
@@ -250,7 +254,9 @@ export default function EliteHomePage() {
 
             <div className="space-y-1">
               <span className="text-slate-500 text-[10px]">PING TIMESTAMP</span>
-              <p className="text-[#eaedf0] font-bold">{apiStatus.timestamp || new Date().toISOString()}</p>
+              <p className="text-[#eaedf0] font-bold">
+                {mounted ? (apiStatus.timestamp || 'Loading...') : 'Initializing...'}
+              </p>
             </div>
           </div>
         </div>
