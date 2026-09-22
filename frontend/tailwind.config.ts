@@ -22,6 +22,9 @@ const config: Config = {
           elevated: 'hsl(var(--card-elevated))',
         },
         spec: 'hsl(var(--spec))',
+        cyan: {
+          DEFAULT: '#0cbde8',
+        },
         vertex: {
           dark: '#020204',
           cyan: '#0cbde8',

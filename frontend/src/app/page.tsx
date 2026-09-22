@@ -407,10 +407,10 @@ export default function VertexLandingPage() {
             <div className="navmenu" id="navmenu">
               <div className="links" id="links">
                 <Link href="/">Home</Link>
-                <Link href="/login">Dashboard</Link>
-                <Link href="/login">Assessments</Link>
-                <Link href="/login">Projects</Link>
-                <Link href="/login">Teams</Link>
+                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/assessments">Assessments</Link>
+                <Link href="/projects">Projects</Link>
+                <Link href="/teams">Teams</Link>
               </div>
               <div className="nav-actions">
                 <Link href="/login" className="v-btn nav-btn-ghost"><span>Login</span></Link>

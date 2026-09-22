@@ -18,6 +18,7 @@ const router = express.Router();
 const assessmentController = require('../controllers/assessment.controller');
 const { protect } = require('../middleware/auth.middleware');
 
+router.post('/seed', assessmentController.seedLeetcode);
 router.get('/', assessmentController.getAllAssessments);
 router.get('/:id', assessmentController.getAssessmentById);
 router.post('/:id/submit', protect, assessmentController.submitCode);

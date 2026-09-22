@@ -1,4 +1,5 @@
 import React from 'react';
+import Editor from '@monaco-editor/react';
 
 interface CodeEditorProps {
   language: string;
@@ -7,39 +8,37 @@ interface CodeEditorProps {
 }
 
 export default function CodeEditor({ language, code, onChange }: CodeEditorProps) {
-  const getLanguageComment = () => {
-    switch (language) {
-      case 'python': return '# Write your Python code below...';
-      case 'c++': return '// Write your C++ code below...';
-      default: return '// Write your code here...';
-    }
+  // Map our language strings to Monaco's expected language IDs
+  const getMonacoLanguage = (lang: string) => {
+    const l = lang.toLowerCase();
+    if (l === 'c++') return 'cpp';
+    if (l === 'js') return 'javascript';
+    if (l === 'java') return 'java';
+    return l;
   };
 
   return (
-    <div className="w-full flex flex-col rounded-[24px] overflow-hidden border border-gray-200 bg-white shadow-xl relative">
-      <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center z-10">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-400"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-          <div className="w-3 h-3 rounded-full bg-green-400"></div>
-        </div>
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{language}</span>
-      </div>
-      
-      <div className="relative flex-grow h-[400px]">
-        {/* Line numbers (mock) */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 bg-gray-50 border-r border-gray-200 flex flex-col text-right pr-3 py-4 text-gray-400 font-mono text-sm leading-relaxed pointer-events-none select-none">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div key={i}>{i + 1}</div>
-          ))}
-        </div>
-        
-        <textarea
+    <div data-no-invert="true" className="w-full flex flex-col h-full overflow-hidden bg-[#1e1e1e] relative border border-[#2d333b] rounded-md shadow-sm">
+      <div className="flex-grow relative">
+        <Editor
+          height="100%"
+          language={getMonacoLanguage(language)}
+          theme="vs-dark"
           value={code}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={getLanguageComment()}
-          className="absolute inset-0 pl-16 pr-4 py-4 w-full h-full bg-transparent text-gray-900 font-mono text-sm leading-relaxed resize-none focus:outline-none placeholder-gray-400"
-          spellCheck="false"
+          onChange={(val) => onChange(val || '')}
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+            fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
+            lineHeight: 24,
+            padding: { top: 16 },
+            scrollBeyondLastLine: false,
+            smoothScrolling: true,
+            cursorBlinking: "smooth",
+            cursorSmoothCaretAnimation: "on",
+            formatOnPaste: true,
+          }}
+          loading={<div className="h-full w-full flex items-center justify-center text-gray-400 font-mono animate-pulse">Loading Editor...</div>}
         />
       </div>
     </div>

@@ -36,6 +36,12 @@ const updateUser = async (req, res) => {
       if (req.body.linkedinUrl !== undefined) {
         user.linkedinUrl = req.body.linkedinUrl;
       }
+      if (req.body.leetcodeUrl !== undefined) {
+        user.leetcodeUrl = req.body.leetcodeUrl;
+      }
+      if (req.body.hackerrankUrl !== undefined) {
+        user.hackerrankUrl = req.body.hackerrankUrl;
+      }
       
       const updatedUser = await user.save();
       console.log('Profile updated successfully for user:', updatedUser._id);

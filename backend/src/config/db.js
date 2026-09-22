@@ -15,9 +15,21 @@ const connectDB = async () => {
     // Use an in-memory database for flagship demo mode if specified or if local fails
     if (uri === 'memory') {
       const { MongoMemoryServer } = require('mongodb-memory-server');
-      mongoServer = await MongoMemoryServer.create();
+      const path = require('path');
+      const fs = require('fs');
+      
+      const dbPath = path.join(__dirname, '../../.local_db');
+      if (!fs.existsSync(dbPath)) {
+        fs.mkdirSync(dbPath, { recursive: true });
+      }
+
+      mongoServer = await MongoMemoryServer.create({
+        instance: {
+          dbPath: dbPath
+        }
+      });
       uri = mongoServer.getUri();
-      console.log('🌟 [DEMO MODE] Started In-Memory MongoDB Server');
+      console.log('🌟 [DEMO MODE] Started Persistent Local MongoDB Server');
     }
 
     const conn = await mongoose.connect(uri, {

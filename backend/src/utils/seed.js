@@ -53,11 +53,25 @@ const seedAssessments = async () => {
             expectedOutput: '0 1',
           }
         ]
+      },
+      {
+        title: 'Valid Palindrome',
+        description: 'Write a Java program to check if a given string is a valid palindrome. Ignore non-alphanumeric characters and case. Print "true" or "false".',
+        difficulty: 'medium',
+        language: 'java',
+        points: 25,
+        starterCode: 'import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Your code here. Print "true" or "false".\n        System.out.println("true");\n    }\n}',
+        testCases: [
+          {
+            input: 'A man, a plan, a canal: Panama',
+            expectedOutput: 'true',
+          }
+        ]
       }
     ];
 
     await Assessment.insertMany(defaultAssessments);
-    console.log('✅ Successfully seeded 3 coding challenges!');
+    console.log('✅ Successfully seeded 4 coding challenges!');
   } catch (error) {
     console.error('❌ Failed to seed assessments:', error.message);
   }

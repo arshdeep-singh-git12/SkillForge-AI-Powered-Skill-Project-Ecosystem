@@ -15,6 +15,10 @@ export default function ProfilePage() {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [leetcodeUrl, setLeetcodeUrl] = useState('');
+  const [hackerrankUrl, setHackerrankUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -25,12 +29,32 @@ export default function ProfilePage() {
   const [loadingData, setLoadingData] = useState(false);
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError('Image size must be less than 5MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       setName(user.name);
       setBio(user.bio || '');
       setAvatar(user.avatar || '');
+      setGithubUrl(user.githubUrl || '');
+      setLinkedinUrl(user.linkedinUrl || '');
+      setLeetcodeUrl(user.leetcodeUrl || '');
+      setHackerrankUrl(user.hackerrankUrl || '');
     }
   }, [user]);
 
@@ -62,7 +86,7 @@ export default function ProfilePage() {
     setLoading(true);
 
     try {
-      const updatedUser = await updateProfile({ name, bio, avatar });
+      const updatedUser = await updateProfile({ name, bio, avatar, githubUrl, linkedinUrl, leetcodeUrl, hackerrankUrl });
       setUser(updatedUser);
       setSuccess(true);
       setIsEditing(false);
@@ -98,7 +122,55 @@ export default function ProfilePage() {
     }
   };
 
+  const getGithubUsername = (url: string) => {
+    if (!url) return null;
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname.includes('github.com')) {
+        const parts = urlObj.pathname.split('/').filter(Boolean);
+        return parts.length > 0 ? parts[0] : null;
+      }
+    } catch (e) {
+      if (!url.includes('http') && !url.includes('/')) {
+        return url;
+      }
+    }
+    return null;
+  };
+
+  const getLeetcodeUsername = (url: string) => {
+    if (!url) return null;
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname.includes('leetcode.com')) {
+        const parts = urlObj.pathname.split('/').filter(Boolean);
+        return parts.length > 0 ? (parts[0] === 'u' ? parts[1] : parts[0]) : null;
+      }
+    } catch (e) {
+      if (!url.includes('http') && !url.includes('/')) return url;
+    }
+    return null;
+  };
+
+  const getHackerrankUsername = (url: string) => {
+    if (!url) return null;
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname.includes('hackerrank.com')) {
+        const parts = urlObj.pathname.split('/').filter(Boolean);
+        return parts.length > 0 ? (parts[0] === 'profile' ? parts[1] : parts[0]) : null;
+      }
+    } catch (e) {
+      if (!url.includes('http') && !url.includes('/')) return url;
+    }
+    return null;
+  };
+
   if (!user) return null;
+
+  const githubUsername = user.githubUrl ? getGithubUsername(user.githubUrl) : null;
+  const leetcodeUsername = user.leetcodeUrl ? getLeetcodeUsername(user.leetcodeUrl) : null;
+  const hackerrankUsername = user.hackerrankUrl ? getHackerrankUsername(user.hackerrankUrl) : null;
 
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-5xl mx-auto font-sans">
@@ -129,8 +201,11 @@ export default function ProfilePage() {
                 <span className="text-4xl font-bold text-gray-400">{name?.charAt(0).toUpperCase()}</span>
               )}
               {isEditing && (
-                <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-xs font-bold text-white">Edit URL</span>
+                <div 
+                  className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  onClick={() => imageInputRef.current?.click()}
+                >
+                  <span className="text-xs font-bold text-white">Upload Photo</span>
                 </div>
               )}
             </div>
@@ -146,8 +221,8 @@ export default function ProfilePage() {
                 </div>
                 
                 {/* Social Links Display */}
-                {(user.githubUrl || user.linkedinUrl) && (
-                  <div className="flex gap-4">
+                {(user.githubUrl || user.linkedinUrl || user.leetcodeUrl || user.hackerrankUrl) && (
+                  <div className="flex flex-wrap gap-4">
                     {user.githubUrl && (
                       <a href={user.githubUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1 text-sm font-medium">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -160,6 +235,18 @@ export default function ProfilePage() {
                         LinkedIn
                       </a>
                     )}
+                    {user.leetcodeUrl && (
+                      <a href={user.leetcodeUrl} target="_blank" rel="noreferrer" className="text-[#ffa116] hover:text-[#e08c10] transition-colors flex items-center gap-1 text-sm font-medium">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                        LeetCode
+                      </a>
+                    )}
+                    {user.hackerrankUrl && (
+                      <a href={user.hackerrankUrl} target="_blank" rel="noreferrer" className="text-[#2ec866] hover:text-[#25a554] transition-colors flex items-center gap-1 text-sm font-medium">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M0 0v24h24V0zm9.95 8.002h1.805c.061 0 .111.05.111.111v7.767c0 .061-.05.111-.11.111H9.95c-.061 0-.111-.05-.111-.11v-2.87H7.894v2.87c0 .06-.05.11-.11.11H5.976a.11.11 0 01-.11-.11V8.112c0-.06.05-.11.11-.11h1.806c.061 0 .11.05.11.11v2.869H9.84v-2.87c0-.06.05-.11.11-.11zm2.999 0h5.778c.061 0 .111.05.111.11v7.767a.11.11 0 01-.11.112h-5.78a.11.11 0 01-.11-.11V8.111c0-.06.05-.11.11-.11z"/></svg>
+                        HackerRank
+                      </a>
+                    )}
                   </div>
                 )}
 
@@ -169,6 +256,55 @@ export default function ProfilePage() {
                     {user.bio || 'No biography provided yet. Edit your profile to tell us about yourself.'}
                   </p>
                 </div>
+
+                {leetcodeUsername && (
+                  <div className="mt-8">
+                    <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">LeetCode Stats</h3>
+                    <div className="bg-[#1a1a1a] p-5 rounded-[16px] border border-gray-100 overflow-x-auto shadow-inner flex justify-center">
+                      <img 
+                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=dark`} 
+                        alt={`${leetcodeUsername}'s LeetCode Stats`} 
+                        className="w-full max-w-[450px]"
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {githubUsername && (
+                  <div className="mt-8">
+                    <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">GitHub Contributions</h3>
+                    <div className="bg-gray-50 p-5 rounded-[16px] border border-gray-100 overflow-x-auto shadow-inner flex justify-center">
+                      <img 
+                        src={`https://ghchart.rshah.org/0ea5e9/${githubUsername}`} 
+                        alt={`${githubUsername}'s GitHub Contributions Graph`} 
+                        className="w-full max-w-[800px] min-w-[600px] mix-blend-multiply"
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {hackerrankUsername && (
+                  <div className="mt-8">
+                    <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">HackerRank Profile</h3>
+                    <a href={user.hackerrankUrl} target="_blank" rel="noreferrer" className="block w-full bg-gradient-to-r from-[#2ec866]/10 to-transparent border border-[#2ec866]/20 p-6 rounded-[16px] hover:from-[#2ec866]/20 transition-all cursor-pointer group relative overflow-hidden">
+                      <div className="absolute -top-4 -right-4 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg className="w-32 h-32 text-[#2ec866] fill-current" viewBox="0 0 24 24"><path d="M0 0v24h24V0zm9.95 8.002h1.805c.061 0 .111.05.111.111v7.767c0 .061-.05.111-.11.111H9.95c-.061 0-.111-.05-.111-.11v-2.87H7.894v2.87c0 .06-.05.11-.11.11H5.976a.11.11 0 01-.11-.11V8.112c0-.06.05-.11.11-.11h1.806c.061 0 .11.05.11.11v2.869H9.84v-2.87c0-.06.05-.11.11-.11zm2.999 0h5.778c.061 0 .111.05.111.11v7.767a.11.11 0 01-.11.112h-5.78a.11.11 0 01-.11-.11V8.111c0-.06.05-.11.11-.11z"/></svg>
+                      </div>
+                      <div className="flex items-center gap-5 relative z-10">
+                        <div className="w-16 h-16 bg-[#2ec866] rounded-xl flex items-center justify-center shadow-lg shadow-[#2ec866]/30">
+                          <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24"><path d="M0 0v24h24V0zm9.95 8.002h1.805c.061 0 .111.05.111.111v7.767c0 .061-.05.111-.11.111H9.95c-.061 0-.111-.05-.111-.11v-2.87H7.894v2.87c0 .06-.05.11-.11.11H5.976a.11.11 0 01-.11-.11V8.112c0-.06.05-.11.11-.11h1.806c.061 0 .11.05.11.11v2.869H9.84v-2.87c0-.06.05-.11.11-.11zm2.999 0h5.778c.061 0 .111.05.111.11v7.767a.11.11 0 01-.11.112h-5.78a.11.11 0 01-.11-.11V8.111c0-.06.05-.11.11-.11z"/></svg>
+                        </div>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                            @{hackerrankUsername}
+                            <svg className="w-4 h-4 text-gray-400 group-hover:text-[#2ec866] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                          </h4>
+                          <p className="text-sm font-medium text-gray-500">View full profile & achievements on HackerRank</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                )}
                 <button
                   onClick={() => setIsEditing(true)}
                   className="interior-pill bg-white shadow-sm border border-gray-200"
@@ -180,14 +316,28 @@ export default function ProfilePage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
-                    Avatar URL
+                    Profile Photo
                   </label>
-                  <input
-                    type="url"
-                    value={avatar}
-                    onChange={(e) => setAvatar(e.target.value)}
-                    className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors shadow-sm"
-                  />
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={imageInputRef}
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => imageInputRef.current?.click()}
+                      className="interior-pill bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-2 shadow-sm"
+                    >
+                      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                      Select Photo from Device
+                    </button>
+                    {avatar && avatar.startsWith('data:image') && (
+                      <p className="text-xs text-green-600 font-medium mt-2">New photo selected</p>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
@@ -211,6 +361,62 @@ export default function ProfilePage() {
                     rows={4}
                     className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors resize-none shadow-sm"
                   />
+                </div>
+                
+                <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide border-b border-gray-100 pb-2 mt-6 mb-4">Social & Coding Profiles</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
+                      GitHub URL
+                    </label>
+                    <input
+                      type="url"
+                      value={githubUrl}
+                      onChange={(e) => setGithubUrl(e.target.value)}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors shadow-sm"
+                      placeholder="https://github.com/username"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
+                      LinkedIn URL
+                    </label>
+                    <input
+                      type="url"
+                      value={linkedinUrl}
+                      onChange={(e) => setLinkedinUrl(e.target.value)}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors shadow-sm"
+                      placeholder="https://linkedin.com/in/username"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
+                      LeetCode URL
+                    </label>
+                    <input
+                      type="url"
+                      value={leetcodeUrl}
+                      onChange={(e) => setLeetcodeUrl(e.target.value)}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors shadow-sm"
+                      placeholder="https://leetcode.com/username"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 block uppercase tracking-wide">
+                      HackerRank URL
+                    </label>
+                    <input
+                      type="url"
+                      value={hackerrankUrl}
+                      onChange={(e) => setHackerrankUrl(e.target.value)}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors shadow-sm"
+                      placeholder="https://hackerrank.com/username"
+                    />
+                  </div>
                 </div>
                 <div className="flex gap-4">
                   <button type="submit" disabled={loading} className="interior-pill interior-pill-active shadow-md disabled:opacity-70">

@@ -82,19 +82,21 @@ export default function CreateTeamModal({ isOpen, onClose, onSubmit }: CreateTea
             />
           </div>
 
-          <div className="space-y-2 pt-2">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700 block">Max Members</label>
-              <span className="text-cyan font-bold">{maxMembers}</span>
+          <div className="space-y-1.5 pt-2">
+            <label className="text-sm font-medium text-gray-700 block">Max Members</label>
+            <div className="flex items-center gap-4">
+              <input 
+                type="range" 
+                min="2" 
+                max="10" 
+                value={maxMembers}
+                onChange={(e) => setMaxMembers(Number(e.target.value))}
+                className="flex-1 accent-cyan h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="w-12 h-10 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200 text-[#0cbde8] font-bold shadow-sm">
+                {maxMembers}
+              </div>
             </div>
-            <input 
-              type="range" 
-              min="2" 
-              max="10" 
-              value={maxMembers}
-              onChange={(e) => setMaxMembers(Number(e.target.value))}
-              className="w-full accent-cyan h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-            />
           </div>
           
           <div className="pt-6 flex justify-end gap-3">

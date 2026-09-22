@@ -14,7 +14,7 @@ const generateToken = (id) => {
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, githubUrl, linkedinUrl } = req.body;
+    const { name, email, password, avatar, githubUrl, linkedinUrl, leetcodeUrl, hackerrankUrl } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -25,12 +25,18 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const user = await User.create({
       name,
       email,
-      passwordHash: password,
+      passwordHash: hashedPassword,
+      avatar,
       githubUrl,
-      linkedinUrl
+      linkedinUrl,
+      leetcodeUrl,
+      hackerrankUrl
     });
 
     if (user) {
@@ -39,13 +45,19 @@ const register = async (req, res) => {
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: 'lax'
       });
 
       res.status(201).json({
         _id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        avatar: user.avatar,
+        bio: user.bio,
+        githubUrl: user.githubUrl,
+        linkedinUrl: user.linkedinUrl,
+        leetcodeUrl: user.leetcodeUrl,
+        hackerrankUrl: user.hackerrankUrl
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -71,13 +83,19 @@ const login = async (req, res) => {
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: 'lax'
       });
 
       res.json({
         _id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        avatar: user.avatar,
+        bio: user.bio,
+        githubUrl: user.githubUrl,
+        linkedinUrl: user.linkedinUrl,
+        leetcodeUrl: user.leetcodeUrl,
+        hackerrankUrl: user.hackerrankUrl
       });
     } else {
       res.status(401).json({ message: 'Invalid credentials' });

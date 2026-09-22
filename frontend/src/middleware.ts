@@ -28,10 +28,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // If user is already logged in and tries to access login/signup, redirect to dashboard
-  if ((pathname === '/login' || pathname === '/signup') && token && token !== 'none') {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
+  // Removed naive check that redirects to dashboard based solely on token existence.
+  // This prevents infinite redirect loops when the token is expired/invalid.
 
   return NextResponse.next();
 }
