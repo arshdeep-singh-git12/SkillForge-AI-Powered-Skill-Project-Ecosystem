@@ -20,7 +20,12 @@ export const createTeam = async (teamData: any) => {
   return response.data;
 };
 
-export const joinTeam = async (teamId: string) => {
-  const response = await api.post(`/teams/${teamId}/join`);
+export const joinTeam = async (teamId: string, formData?: any) => {
+  const response = await api.post(`/teams/${teamId}/join`, formData);
+  return response.data;
+};
+
+export const closeTeam = async (teamId: string) => {
+  const response = await api.post(`/teams/${teamId}/close`);
   return response.data;
 };

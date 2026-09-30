@@ -217,7 +217,12 @@ export default function ProfilePage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
-                  <p className="text-sm text-gray-500 font-medium mt-1">{user.email}</p>
+                  <p className="text-sm text-gray-500 font-medium mt-1 mb-3">{user.email}</p>
+                  
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-bold text-gray-700 shadow-sm cursor-default hover:bg-gray-100 transition-colors">
+                    <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
+                  </div>
                 </div>
                 
                 {/* Social Links Display */}

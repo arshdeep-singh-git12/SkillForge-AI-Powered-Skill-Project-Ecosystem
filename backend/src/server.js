@@ -7,11 +7,13 @@
  */
 
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { connectDB } = require('./config/db');
 const { seedAssessments, seedUsers } = require('./utils/seed');
+const { initSocket } = require('./socket');
 const passport = require('./config/passport');
 const session = require('express-session');
 const { PORT, NODE_ENV } = require('./config/env');
@@ -19,6 +21,10 @@ const routes = require('./routes');
 const { errorHandler, notFound } = require('./middleware/error.middleware');
 
 const app = express();
+const server = http.createServer(app);
+
+// Initialize Socket.io
+initSocket(server);
 
 // --------------- Middleware ---------------
 app.use(helmet());
@@ -61,7 +67,7 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     // Start listening immediately so frontend doesn't get Connection Refused
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`\n🚀 SkillForge API running on http://localhost:${PORT}`);
       console.log(`📍 Environment: ${NODE_ENV}`);
       console.log(`❤️  Health check: http://localhost:${PORT}/api/health\n`);

@@ -20,6 +20,10 @@ const reviewRoutes = require('./review.routes');
 const teamRoutes = require('./team.routes');
 const githubRoutes = require('./github.routes');
 const linkedinRoutes = require('./linkedin.routes');
+const notificationRoutes = require('./notification.routes');
+
+const searchRoutes = require('./search.routes');
+const messageRoutes = require('./message.routes');
 
 // Register routes
 router.use('/health', healthRoutes);
@@ -33,5 +37,8 @@ router.use('/reviews', reviewRoutes);
 router.use('/teams', teamRoutes);
 router.use('/github', githubRoutes);
 router.use('/linkedin', linkedinRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/search', searchRoutes);
+router.use('/messages', messageRoutes);
 
 module.exports = router;

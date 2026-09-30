@@ -125,4 +125,120 @@ const getProfileCompletion = async (req, res) => {
   }
 };
 
-module.exports = { getUserById, updateUser, deleteUser, getProfileCompletion };
+const getPublicProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select('-passwordHash')
+      .populate('skills');
+    
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Fetch user's public projects
+    const projects = await Project.find({ owner: user._id });
+
+    res.json({
+      user,
+      projects
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+const sendConnectionRequest = async (req, res) => {
+  try {
+    const targetUserId = req.params.id;
+    const senderId = req.user.id;
+
+    if (targetUserId === senderId) {
+      return res.status(400).json({ message: 'Cannot connect with yourself' });
+    }
+
+    const targetUser = await User.findById(targetUserId);
+    if (!targetUser) return res.status(404).json({ message: 'User not found' });
+
+    if (targetUser.connections && targetUser.connections.includes(senderId)) {
+      return res.status(400).json({ message: 'Already connected' });
+    }
+
+    if (targetUser.connectionRequests && targetUser.connectionRequests.includes(senderId)) {
+      return res.status(400).json({ message: 'Request already sent' });
+    }
+
+    if (!targetUser.connectionRequests) targetUser.connectionRequests = [];
+    targetUser.connectionRequests.push(senderId);
+    await targetUser.save();
+
+    // Create Notification
+    const Notification = require('../models/Notification');
+    await Notification.create({
+      recipient: targetUserId,
+      sender: senderId,
+      type: 'CONNECTION_REQUEST', // Ensure this is in the enum in Notification.js! Wait, we will need to update the enum.
+      title: 'New Forge Request',
+      message: 'wants to forge with you.',
+      data: { status: 'PENDING' }
+    });
+
+    res.json({ message: 'Forge request sent' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+const handleConnectionRequest = async (req, res) => {
+  try {
+    const { action, notificationId } = req.body; // action: 'ACCEPT' or 'REJECT'
+    const requesterId = req.params.id;
+    const myUserId = req.user.id;
+
+    const me = await User.findById(myUserId);
+    const requester = await User.findById(requesterId);
+
+    if (!me || !requester) return res.status(404).json({ message: 'User not found' });
+
+    // Remove from my requests
+    me.connectionRequests = me.connectionRequests || [];
+    me.connectionRequests = me.connectionRequests.filter(id => id.toString() !== requesterId);
+
+    if (action === 'ACCEPT') {
+      me.connections = me.connections || [];
+      if (!me.connections.includes(requesterId)) me.connections.push(requesterId);
+      
+      requester.connections = requester.connections || [];
+      if (!requester.connections.includes(myUserId)) requester.connections.push(myUserId);
+      
+      await requester.save();
+
+      // Notify requester that it was accepted
+      const Notification = require('../models/Notification');
+      await Notification.create({
+        recipient: requesterId,
+        sender: myUserId,
+        type: 'GENERAL',
+        title: 'Forge Accepted',
+        message: 'has accepted your forge request!',
+      });
+    }
+
+    await me.save();
+
+    // Mark notification as resolved
+    if (notificationId) {
+      const Notification = require('../models/Notification');
+      const notif = await Notification.findById(notificationId);
+      if (notif) {
+        notif.isRead = true;
+        notif.data = { ...notif.data, status: action };
+        notif.markModified('data');
+        await notif.save();
+      }
+    }
+
+    res.json({ message: `Forge request ${action.toLowerCase()}ed` });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+module.exports = { getUserById, updateUser, deleteUser, getProfileCompletion, getPublicProfile, sendConnectionRequest, handleConnectionRequest };

@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getTeams, createTeam, joinTeam } from '../../services/team.service';
+import { getTeams, createTeam, joinTeam, closeTeam } from '../../services/team.service';
 import CreateTeamModal from '../../components/teams/CreateTeamModal';
+import TeamDetailsSidebar from '../../components/teams/TeamDetailsSidebar';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 
 export default function TeamsPage() {
   const { user } = useAuth();
@@ -11,6 +13,8 @@ export default function TeamsPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchSkill, setSearchSkill] = useState('');
+
+  const [selectedTeam, setSelectedTeam] = useState<any>(null);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -36,20 +40,28 @@ export default function TeamsPage() {
     }
   };
 
-  const handleJoinTeam = async (teamId: string) => {
+  const handleJoinRequest = async (teamId: string, formData: any) => {
     try {
-      await joinTeam(teamId);
-      // Optimistically update the UI
-      setTeams(teams.map(t => {
-        if (t._id === teamId) {
-          return { ...t, members: [...t.members, { _id: user?._id }] };
-        }
-        return t;
-      }));
-      alert('Successfully joined the team!');
+      await joinTeam(teamId, formData);
+      alert('Join request sent successfully!');
+      setSelectedTeam(null);
     } catch (error: any) {
-      console.error('Failed to join team', error);
-      alert(error.response?.data?.message || 'Failed to join team.');
+      console.error('Failed to send join request', error);
+      alert(error.response?.data?.message || 'Failed to send request.');
+    }
+  };
+
+  const handleCloseTeam = async (teamId: string) => {
+    if (confirm('Are you sure you want to close this team? It will no longer accept new members.')) {
+      try {
+        await closeTeam(teamId);
+        setTeams(teams.map(t => t._id === teamId ? { ...t, status: 'closed' } : t));
+        setSelectedTeam(null);
+        alert('Team closed successfully.');
+      } catch (error: any) {
+        console.error('Failed to close team', error);
+        alert(error.response?.data?.message || 'Failed to close team.');
+      }
     }
   };
 
@@ -107,9 +119,10 @@ export default function TeamsPage() {
             const isMember = user && team.members.some((m: any) => m._id === user._id);
 
             return (
-              <div key={team._id} className="interior-panel flex flex-col group relative overflow-hidden p-6 transform hover:-translate-y-1 transition-all duration-300">
+              <div key={team._id} className={`interior-panel flex flex-col group relative overflow-hidden p-6 transform hover:-translate-y-1 transition-all duration-300 ${team.status === 'closed' ? 'opacity-60 grayscale bg-gray-50' : ''}`}>
                 
-                {isFull && <div className="absolute top-0 right-0 bg-red-100 text-red-700 font-sans font-bold text-[10px] px-3 py-1 rounded-bl-[16px] shadow-sm">FULL</div>}
+                {isFull && team.status !== 'closed' && <div className="absolute top-0 right-0 bg-red-100 text-red-700 font-sans font-bold text-[10px] px-3 py-1 rounded-bl-[16px] shadow-sm">FULL</div>}
+                {team.status === 'closed' && <div className="absolute top-0 right-0 bg-gray-500 text-white font-sans font-bold text-[10px] px-3 py-1 rounded-bl-[16px] shadow-sm">CLOSED</div>}
                 {isMember && <div className="absolute top-0 right-0 bg-gray-900 text-white font-sans font-bold text-[10px] px-3 py-1 rounded-bl-[16px] shadow-sm">MEMBER</div>}
 
                 <h3 className="font-bold text-xl text-gray-900 mb-2 mt-1">{team.name}</h3>
@@ -148,14 +161,12 @@ export default function TeamsPage() {
                     </span>
                   </div>
 
-                  {!isMember && !isFull && (
-                    <button 
-                      onClick={() => handleJoinTeam(team._id)}
-                      className="interior-pill text-xs shadow-sm bg-gray-50 border border-gray-200"
-                    >
-                      Join Team
-                    </button>
-                  )}
+                  <button 
+                    onClick={() => setSelectedTeam(team)}
+                    className="interior-pill text-xs shadow-sm bg-gray-900 text-white hover:bg-gray-800"
+                  >
+                    View Requirements
+                  </button>
                 </div>
               </div>
             );
@@ -167,6 +178,18 @@ export default function TeamsPage() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onSubmit={handleCreateTeam} 
+      />
+
+      <TeamDetailsSidebar
+        team={selectedTeam}
+        isOpen={!!selectedTeam}
+        onClose={() => setSelectedTeam(null)}
+        onJoinRequest={handleJoinRequest}
+        isMember={selectedTeam ? (user && selectedTeam.members.some((m: any) => m._id === user._id)) : false}
+        isFull={selectedTeam ? selectedTeam.members.length >= selectedTeam.maxMembers : false}
+        isOwner={selectedTeam ? (user && (selectedTeam.owner._id === user._id || selectedTeam.owner === user._id)) : false}
+        isClosed={selectedTeam?.status === 'closed'}
+        onCloseTeam={handleCloseTeam}
       />
     </div>
   );

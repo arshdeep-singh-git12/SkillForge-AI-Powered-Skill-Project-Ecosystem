@@ -29,7 +29,8 @@ const teamSchema = new mongoose.Schema(
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     requiredSkills: [{ type: String }],
     maxMembers: { type: Number, default: 4 },
-    status: { type: String, enum: ['recruiting', 'active', 'completed'], default: 'recruiting' },
+    status: { type: String, enum: ['recruiting', 'active', 'completed', 'closed'], default: 'recruiting' },
+    closedAt: { type: Date },
   },
   {
     timestamps: true,
