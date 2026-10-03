@@ -24,3 +24,8 @@ export const getUserProjects = async (userId: string) => {
   const response = await api.get(`/projects/user/${userId}`);
   return response.data;
 };
+
+export const likeProject = async (projectId: string) => {
+  const response = await api.post(`/projects/${projectId}/like`);
+  return response.data;
+};

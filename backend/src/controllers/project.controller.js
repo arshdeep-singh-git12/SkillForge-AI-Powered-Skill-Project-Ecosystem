@@ -58,4 +58,45 @@ const getProjectById = async (req, res) => {
   }
 };
 
-module.exports = { getAllProjects, getUserProjects, createProject, getProjectById };
+const toggleLikeProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+
+    const userId = req.user.id;
+    const hasLiked = project.likes && project.likes.includes(userId);
+
+    if (hasLiked) {
+      project.likes = project.likes.filter(id => id.toString() !== userId.toString());
+      
+      // Decrement owner total likes
+      const User = require('../models/User');
+      await User.findByIdAndUpdate(project.owner, { $inc: { totalLikes: -1 } });
+    } else {
+      project.likes = project.likes || [];
+      project.likes.push(userId);
+      
+      // Increment owner total likes
+      const User = require('../models/User');
+      await User.findByIdAndUpdate(project.owner, { $inc: { totalLikes: 1 } });
+      
+      if (project.owner.toString() !== userId.toString()) {
+        const Notification = require('../models/Notification');
+        await Notification.create({
+          recipient: project.owner,
+          sender: userId,
+          type: 'PROJECT_LIKE',
+          title: 'New Like on Project!',
+          message: `liked your project "${project.title}".`,
+        });
+      }
+    }
+    
+    await project.save();
+    res.json({ message: hasLiked ? 'Unliked' : 'Liked', likes: project.likes });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+module.exports = { getAllProjects, getUserProjects, createProject, getProjectById, toggleLikeProject };

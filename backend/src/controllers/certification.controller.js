@@ -37,4 +37,45 @@ const addExternalCertification = async (req, res) => {
   }
 };
 
-module.exports = { getUserCertifications, addExternalCertification };
+const toggleLikeCertification = async (req, res) => {
+  try {
+    const certification = await Certification.findById(req.params.id);
+    if (!certification) return res.status(404).json({ message: 'Certification not found' });
+
+    const userId = req.user.id;
+    const hasLiked = certification.likes && certification.likes.includes(userId);
+
+    if (hasLiked) {
+      certification.likes = certification.likes.filter(id => id.toString() !== userId.toString());
+      
+      // Decrement user total likes
+      const User = require('../models/User');
+      await User.findByIdAndUpdate(certification.user, { $inc: { totalLikes: -1 } });
+    } else {
+      certification.likes = certification.likes || [];
+      certification.likes.push(userId);
+      
+      // Increment user total likes
+      const User = require('../models/User');
+      await User.findByIdAndUpdate(certification.user, { $inc: { totalLikes: 1 } });
+      
+      if (certification.user.toString() !== userId.toString()) {
+        const Notification = require('../models/Notification');
+        await Notification.create({
+          recipient: certification.user,
+          sender: userId,
+          type: 'CERTIFICATE_LIKE',
+          title: 'New Like on Certification!',
+          message: `liked your certification "${certification.title}".`,
+        });
+      }
+    }
+    
+    await certification.save();
+    res.json({ message: hasLiked ? 'Unliked' : 'Liked', likes: certification.likes });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+module.exports = { getUserCertifications, addExternalCertification, toggleLikeCertification };

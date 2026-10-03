@@ -134,7 +134,9 @@ export default function NotificationsPage() {
                       ? 'bg-purple-100 text-purple-600' 
                       : notification.type === 'TEAM_JOIN_ACCEPTED'
                         ? 'bg-green-100 text-green-600'
-                        : 'bg-blue-100 text-blue-600'
+                        : ['PROJECT_LIKE', 'CERTIFICATE_LIKE'].includes(notification.type)
+                          ? 'bg-red-100 text-red-500'
+                          : 'bg-blue-100 text-blue-600'
                   }`}>
                     {notification.type === 'TEAM_JOIN_REQUEST' ? (
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,6 +149,10 @@ export default function NotificationsPage() {
                     ) : notification.type === 'TEAM_JOIN_ACCEPTED' ? (
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    ) : ['PROJECT_LIKE', 'CERTIFICATE_LIKE'].includes(notification.type) ? (
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" />
                       </svg>
                     ) : (
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,8 +172,8 @@ export default function NotificationsPage() {
                     </div>
                     
                     <p className="text-gray-600 font-sans">
-                      {notification.type === 'CONNECTION_REQUEST' && notification.sender?.name 
-                        ? `${notification.sender.name} ${notification.message}` 
+                      {['CONNECTION_REQUEST', 'PROJECT_LIKE', 'CERTIFICATE_LIKE'].includes(notification.type) && notification.sender?.name 
+                        ? <><span className="font-bold text-gray-900">{notification.sender.name}</span> {notification.message}</> 
                         : notification.message}
                     </p>
                     

@@ -4,6 +4,7 @@ const Project = require('../models/Project');
 const Certification = require('../models/Certification');
 const { syncGithubProjects } = require('../services/github.service');
 const { syncLinkedinCertificates } = require('../services/linkedin.service');
+const { evaluateProfileLinks } = require('../services/profile-evaluator.service');
 
 const getUserById = async (req, res) => {
   try {
@@ -49,6 +50,9 @@ const updateUser = async (req, res) => {
       // Fire and forget background syncs
       syncGithubProjects(updatedUser).catch(e => console.error(e));
       syncLinkedinCertificates(updatedUser).catch(e => console.error(e));
+      
+      // Trigger AI profile evaluation
+      evaluateProfileLinks(updatedUser._id);
 
       res.json(updatedUser);
     } else {

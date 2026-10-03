@@ -14,7 +14,7 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['TEAM_JOIN_REQUEST', 'TEAM_JOIN_ACCEPTED', 'CONNECTION_REQUEST', 'GENERAL'],
+      enum: ['TEAM_JOIN_REQUEST', 'TEAM_JOIN_ACCEPTED', 'CONNECTION_REQUEST', 'GENERAL', 'PROJECT_LIKE', 'CERTIFICATE_LIKE'],
       default: 'GENERAL',
     },
     title: {

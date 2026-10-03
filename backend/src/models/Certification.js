@@ -30,6 +30,7 @@ const certificationSchema = new mongoose.Schema(
     credentialUrl: { type: String },
     badgeImage: { type: String },
     type: { type: String, enum: ['assessment', 'course', 'external'], default: 'external' },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,

@@ -87,6 +87,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    profileEvaluation: {
+      type: String,
+      default: '',
+    },
+    totalLikes: {
+      type: Number,
+      default: 0,
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],

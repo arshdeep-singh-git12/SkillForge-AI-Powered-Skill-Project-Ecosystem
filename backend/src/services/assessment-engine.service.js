@@ -1,6 +1,7 @@
 const Skill = require('../models/Skill');
 const Certification = require('../models/Certification');
 const Project = require('../models/Project');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Predefined mapping of certificates to skills and baseline proficiency
 const CERTIFICATE_MAPPINGS = {
@@ -98,35 +99,47 @@ const processProject = async (userId, projectId) => {
   const project = await Project.findById(projectId);
   if (!project) return null;
 
-  // MOCK AI EVALUATION
-  // We'll award points based on the tech stack mentioned.
-  // E.g., each tech mentioned gets a baseline score of 50 for a completed project.
   const results = [];
   
   if (project.techStack && project.techStack.length > 0) {
-    let score = 30; // base score
-
-    // Add points for each technology
-    score += project.techStack.length * 10;
-
-    // Keyword analysis for complexity
-    const keywords = ['auth', 'database', 'api', 'machine learning', 'real-time', 'cache', 'payment', 'docker', 'cloud', 'architecture'];
-    const desc = (project.description || '').toLowerCase();
+    let score = 30; // Fallback default score
     
-    let matchCount = 0;
-    for (const keyword of keywords) {
-      if (desc.includes(keyword)) {
-        score += 5;
-        matchCount++;
+    try {
+      if (process.env.GEMINI_API_KEY) {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        
+        const prompt = `Analyze this software project and evaluate the proficiency demonstrated for its tech stack.
+        Project Title: ${project.title}
+        Description: ${project.description || 'No description provided'}
+        Status: ${project.status}
+        Technologies Used: ${project.techStack.join(', ')}
+        
+        Based on the complexity typically associated with these technologies and the project details provided, assign an overall estimated proficiency score from 1 to 100 for this project's implementation.
+        Respond ONLY with a single JSON object in this exact format, with no markdown formatting:
+        {"score": 85}`;
+
+        const result = await model.generateContent(prompt);
+        const responseText = result.response.text().replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
+        const parsedResponse = JSON.parse(responseText);
+        
+        if (parsedResponse.score && !isNaN(parsedResponse.score)) {
+          score = Number(parsedResponse.score);
+          console.log(`🤖 Gemini AI Assessed project "${project.title}": awarded ${score} points.`);
+        }
+      } else {
+        console.warn("No GEMINI_API_KEY found, falling back to basic heuristic scoring.");
+        // Basic heuristic fallback if no API key
+        score += project.techStack.length * 10;
+        if (project.status === 'completed') score += 10;
+        score = Math.min(score, 100);
       }
+    } catch (err) {
+      console.error("Gemini API Error in processProject:", err.message);
+      // Fallback
+      score = 50 + (project.techStack.length * 5);
+      score = Math.min(score, 100);
     }
-
-    if (project.status === 'completed') {
-      score += 10;
-    }
-
-    score = Math.min(score, 100);
-    console.log(`🧠 Local Engine Assessed project "${project.title}": awarded ${score} points based on ${project.techStack.length} techs and ${matchCount} keywords.`);
 
     for (const tech of project.techStack) {
       const updatedSkill = await upsertSkillProficiency(

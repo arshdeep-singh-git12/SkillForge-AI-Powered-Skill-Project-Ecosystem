@@ -32,6 +32,7 @@ const projectSchema = new mongoose.Schema(
     status: { type: String, enum: ['in-progress', 'completed', 'archived'], default: 'completed' },
     collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     tags: [{ type: String }],
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,

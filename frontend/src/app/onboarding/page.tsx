@@ -198,7 +198,6 @@ export default function OnboardingPage() {
                     type="url"
                     value={githubUrl}
                     onChange={(e) => setGithubUrl(e.target.value)}
-                    required
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors shadow-sm"
                     placeholder="https://github.com/username"
                   />
@@ -216,7 +215,6 @@ export default function OnboardingPage() {
                     type="url"
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
-                    required
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors shadow-sm"
                     placeholder="https://linkedin.com/in/username"
                   />

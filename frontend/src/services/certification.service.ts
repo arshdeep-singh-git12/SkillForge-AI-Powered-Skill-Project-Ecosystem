@@ -31,3 +31,8 @@ export const uploadLinkedinPdf = async (file: File) => {
   });
   return response.data;
 };
+
+export const likeCertification = async (certId: string) => {
+  const response = await api.post(`/certifications/${certId}/like`);
+  return response.data;
+};

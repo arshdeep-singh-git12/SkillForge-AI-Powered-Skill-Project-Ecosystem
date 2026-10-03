@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import api from '../../../services/api';
 import { useAuth } from '../../../context/AuthContext';
+import { likeProject } from '../../../services/project.service';
 
 export default function PublicProfilePage() {
   const params = useParams();
@@ -52,6 +53,18 @@ export default function PublicProfilePage() {
     }
   };
 
+  const handleLike = async (projectId: string) => {
+    if (!currentUser) return;
+    try {
+      const res = await likeProject(projectId);
+      setProjects(projects.map(p => 
+        p._id === projectId ? { ...p, likes: res.likes } : p
+      ));
+    } catch (error) {
+      console.error('Failed to like project', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-8 flex justify-center">
@@ -91,9 +104,15 @@ export default function PublicProfilePage() {
               <h1 className="text-3xl font-bold text-gray-900">{profileUser.name}</h1>
               <p className="text-gray-500 mt-2 max-w-2xl">{profileUser.bio || 'No bio provided.'}</p>
               
-              <div className="mt-3 flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-50/80 border border-gray-100 rounded-lg px-3 py-1.5 w-fit shadow-sm">
-                <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                {profileUser.connections?.length || 0} Forge Mate{profileUser.connections?.length !== 1 ? 's' : ''}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <div className="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-50/80 border border-gray-100 rounded-lg px-3 py-1.5 w-fit shadow-sm">
+                  <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  {profileUser.connections?.length || 0} Forge Mate{profileUser.connections?.length !== 1 ? 's' : ''}
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-100 rounded-lg text-sm font-bold text-red-600 shadow-sm cursor-default transition-colors w-fit">
+                  <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+                  {profileUser.totalLikes || 0} Total Likes
+                </div>
               </div>
               
               <div className="flex gap-3 mt-5">
@@ -184,11 +203,28 @@ export default function PublicProfilePage() {
                   ))}
                   {p.techStack.length > 3 && <span className="text-xs px-2 py-1 text-gray-400">+{p.techStack.length - 3} more</span>}
                 </div>
-                {p.githubUrl && (
-                  <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-gray-900 hover:underline flex items-center gap-1">
-                    View Source
-                  </a>
-                )}
+                <div className="flex justify-between items-center mt-auto border-t border-gray-100 pt-3">
+                  {p.githubUrl ? (
+                    <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-gray-900 hover:underline flex items-center gap-1">
+                      View Source
+                    </a>
+                  ) : <div></div>}
+                  
+                  <button 
+                    onClick={() => handleLike(p._id)}
+                    className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors hover:bg-red-50 text-gray-600 -mr-2"
+                    title="Like this project"
+                  >
+                    <svg 
+                      className={`w-5 h-5 transition-colors ${p.likes?.includes(currentUser?._id) ? 'fill-red-500 text-red-500' : 'fill-transparent text-gray-400 hover:text-red-400'}`} 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    <span className="text-sm font-bold">{p.likes?.length || 0}</span>
+                  </button>
+                </div>
               </div>
             ))}
           </div>

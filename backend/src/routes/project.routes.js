@@ -7,5 +7,6 @@ router.get('/', projectController.getAllProjects);
 router.get('/user/:userId', projectController.getUserProjects);
 router.post('/', protect, projectController.createProject);
 router.get('/:id', projectController.getProjectById);
+router.post('/:id/like', protect, projectController.toggleLikeProject);
 
 module.exports = router;

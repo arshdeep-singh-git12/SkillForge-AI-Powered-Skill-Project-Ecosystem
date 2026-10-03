@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
-import { getProjects, createProject } from '../../services/project.service';
+import { getProjects, createProject, likeProject } from '../../services/project.service';
 import ProjectModal from '../../components/dashboard/ProjectModal';
 import CompletionPopup from '../../components/dashboard/CompletionPopup';
 
@@ -46,6 +46,18 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Failed to create project', error);
       alert('Failed to upload project. Try again.');
+    }
+  };
+
+  const handleLike = async (projectId: string) => {
+    if (!user) return;
+    try {
+      const res = await likeProject(projectId);
+      setProjects(projects.map(p => 
+        p._id === projectId ? { ...p, likes: res.likes } : p
+      ));
+    } catch (error) {
+      console.error('Failed to like project', error);
     }
   };
 
@@ -129,14 +141,28 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  {project.githubUrl && (
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 group-hover:bg-cyan/5 transition-colors">
+                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 group-hover:bg-cyan/5 transition-colors flex justify-between items-center">
+                    {project.githubUrl ? (
                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 font-sans font-medium text-sm flex items-center gap-2 transition-colors">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd"></path></svg>
                         View Source
                       </a>
-                    </div>
-                  )}
+                    ) : <div></div>}
+                    <button 
+                      onClick={() => handleLike(project._id)}
+                      className="flex items-center gap-1.5 px-2 py-1 rounded-lg transition-colors hover:bg-red-50 text-gray-600"
+                      title="Like this project"
+                    >
+                      <svg 
+                        className={`w-4 h-4 transition-colors ${project.likes?.includes(user?._id) ? 'fill-red-500 text-red-500' : 'fill-transparent text-gray-400 hover:text-red-400'}`} 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                      </svg>
+                      <span className="text-xs font-bold">{project.likes?.length || 0}</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

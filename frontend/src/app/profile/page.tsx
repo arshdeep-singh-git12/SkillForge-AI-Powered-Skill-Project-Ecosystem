@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile } from '../../services/profile.service';
 import SkillList from '../../components/profile/SkillList';
-import { getUserProjects } from '../../services/project.service';
-import { getCertifications, uploadLinkedinPdf } from '../../services/certification.service';
+import { getUserProjects, likeProject } from '../../services/project.service';
+import { getCertifications, uploadLinkedinPdf, likeCertification } from '../../services/certification.service';
 import { useRef } from 'react';
 
 export default function ProfilePage() {
@@ -122,6 +122,30 @@ export default function ProfilePage() {
     }
   };
 
+  const handleLikeProject = async (projectId: string) => {
+    if (!user) return;
+    try {
+      const res = await likeProject(projectId);
+      setProjects(projects.map(p => 
+        p._id === projectId ? { ...p, likes: res.likes } : p
+      ));
+    } catch (error) {
+      console.error('Failed to like project', error);
+    }
+  };
+
+  const handleLikeCertification = async (certId: string) => {
+    if (!user) return;
+    try {
+      const res = await likeCertification(certId);
+      setCertificates(certificates.map(c => 
+        c._id === certId ? { ...c, likes: res.likes } : c
+      ));
+    } catch (error) {
+      console.error('Failed to like certification', error);
+    }
+  };
+
   const getGithubUsername = (url: string) => {
     if (!url) return null;
     try {
@@ -219,9 +243,15 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
                   <p className="text-sm text-gray-500 font-medium mt-1 mb-3">{user.email}</p>
                   
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-bold text-gray-700 shadow-sm cursor-default hover:bg-gray-100 transition-colors">
-                    <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-bold text-gray-700 shadow-sm cursor-default hover:bg-gray-100 transition-colors">
+                      <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                      {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
+                    </div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-100 rounded-lg text-sm font-bold text-red-600 shadow-sm cursor-default transition-colors">
+                      <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+                      {user.totalLikes || 0} Total Likes
+                    </div>
                   </div>
                 </div>
                 
@@ -261,6 +291,26 @@ export default function ProfilePage() {
                     {user.bio || 'No biography provided yet. Edit your profile to tell us about yourself.'}
                   </p>
                 </div>
+
+                {user.profileEvaluation && (
+                  <div className="mt-8">
+                    <h3 className="text-[11px] font-bold text-cyan uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                      AI Profile Evaluation
+                    </h3>
+                    <div className="bg-gradient-to-r from-cyan/10 to-transparent p-5 rounded-[16px] border border-cyan/20 shadow-sm">
+                      <div 
+                        className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap" 
+                        dangerouslySetInnerHTML={{ 
+                          __html: user.profileEvaluation
+                            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>')
+                            .replace(/### (.*?)\n/g, '<h4 class="font-bold text-lg mb-2 text-gray-900 border-b border-cyan/20 pb-1">$1</h4>')
+                            .replace(/\*(.*?)\*/g, '<em class="text-gray-600 bg-yellow-50 px-1 rounded">$1</em>') 
+                        }} 
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {leetcodeUsername && (
                   <div className="mt-8">
@@ -485,10 +535,26 @@ export default function ProfilePage() {
                   <div key={project._id} className="interior-panel p-6 flex flex-col hover:-translate-y-1 transition-transform">
                     <h3 className="font-bold text-lg text-gray-900">{project.title}</h3>
                     <p className="text-gray-600 text-sm mt-2 line-clamp-2">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div className="flex flex-wrap gap-2 mt-4 mb-4">
                       {project.techStack?.map((tech: string, i: number) => (
                         <span key={i} className="px-2 py-1 bg-gray-100 text-xs font-medium rounded-md text-gray-600">{tech}</span>
                       ))}
+                    </div>
+                    <div className="mt-auto border-t border-gray-100 pt-3">
+                      <button 
+                        onClick={() => handleLikeProject(project._id)}
+                        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors hover:bg-red-50 text-gray-600 -ml-2"
+                        title="Like this project"
+                      >
+                        <svg 
+                          className={`w-5 h-5 transition-colors ${project.likes?.includes(user?._id) ? 'fill-red-500 text-red-500' : 'fill-transparent text-gray-400 hover:text-red-400'}`} 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <span className="text-sm font-bold">{project.likes?.length || 0}</span>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -531,7 +597,24 @@ export default function ProfilePage() {
                   <div key={cert._id} className="interior-panel p-6 flex flex-col hover:-translate-y-1 transition-transform">
                     <h3 className="font-bold text-lg text-gray-900">{cert.title}</h3>
                     <p className="text-gray-500 text-sm">Issued by {cert.issuer}</p>
-                    <p className="text-gray-400 text-xs mt-1">Earned: {new Date(cert.dateEarned).toLocaleDateString()}</p>
+                    <p className="text-gray-400 text-xs mt-1 mb-4">Earned: {new Date(cert.dateEarned).toLocaleDateString()}</p>
+                    
+                    <div className="mt-auto border-t border-gray-100 pt-3">
+                      <button 
+                        onClick={() => handleLikeCertification(cert._id)}
+                        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors hover:bg-red-50 text-gray-600 -ml-2"
+                        title="Like this certification"
+                      >
+                        <svg 
+                          className={`w-5 h-5 transition-colors ${cert.likes?.includes(user?._id) ? 'fill-red-500 text-red-500' : 'fill-transparent text-gray-400 hover:text-red-400'}`} 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <span className="text-sm font-bold">{cert.likes?.length || 0}</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

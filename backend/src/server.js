@@ -6,6 +6,7 @@
  * and starts the HTTP server.
  */
 
+const { PORT, NODE_ENV } = require('./config/env'); // MUST be loaded first for dotenv
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -16,7 +17,6 @@ const { seedAssessments, seedUsers } = require('./utils/seed');
 const { initSocket } = require('./socket');
 const passport = require('./config/passport');
 const session = require('express-session');
-const { PORT, NODE_ENV } = require('./config/env');
 const routes = require('./routes');
 const { errorHandler, notFound } = require('./middleware/error.middleware');
 
@@ -93,5 +93,6 @@ const startServer = async () => {
 };
 
 startServer();
+console.log('🔄 AI Services Restarted Successfully.');
 
 module.exports = app;
