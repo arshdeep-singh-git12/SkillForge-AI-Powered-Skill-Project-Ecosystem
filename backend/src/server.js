@@ -56,3 +56,6 @@ const startServer = async () => {
 startServer();
 
 module.exports = app;
+const certificationRoutes = require("./routes/certification.routes");
+
+app.use("/api/certifications", certificationRoutes);

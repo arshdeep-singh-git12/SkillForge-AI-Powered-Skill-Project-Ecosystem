@@ -1,4 +1,29 @@
-/**
+const mongoose = require('mongoose');
+
+const CertificateSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  issuer: {
+    type: String, // Coursera, AWS, Udemy, etc.
+    required: true
+  },
+  issueDate: {
+    type: Date,
+    required: true
+  },
+  verificationLink: {
+    type: String,
+    required: false
+  },
+  isChallengeBadge: {
+    type: Boolean,
+    default: false // Agar coding challenge clear karke trophy mili hai toh true hoga
+  }
+}, { timestamps: true });
+
+module.exports = mongoose.model('Certificate', CertificateSchema);/**
  * Certification Model — PLACEHOLDER
  * 
  * Mongoose schema for user certifications and badges.
@@ -14,19 +39,4 @@
  *   - badgeImage: URL to badge/icon image
  *   - type: Type of certification ("assessment", "course", "external")
  * 
- * @owner Team Member 4 — Certifications
  */
-
-const mongoose = require('mongoose');
-
-const certificationSchema = new mongoose.Schema(
-  {
-    // TODO: Define schema fields following the User model pattern
-    // See User.js for reference on field definitions, validation, and indexes
-  },
-  {
-    timestamps: true,
-  },
-);
-
-module.exports = mongoose.model('Certification', certificationSchema);
