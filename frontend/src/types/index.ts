@@ -91,21 +91,59 @@ export interface Review {
 
 // ============ Team Types ============
 
-export interface Team {
-  id: string;
-  name: string;
-  description: string;
-  ownerId: string;
-  members: TeamMember[];
-  requiredSkills: string[];
-  maxMembers: number;
-  status: 'recruiting' | 'active' | 'completed';
+export interface TeamMember {
+  user: PopulatedUser;
+  role: 'owner' | 'admin' | 'lead' | 'member';
+  joinedAt: string;
 }
 
-export interface TeamMember {
-  userId: string;
-  role: string;
-  joinedAt: string;
+export interface JoinRequest {
+  user: PopulatedUser;
+  requestedAt: string;
+}
+
+export interface Team {
+  id?: string;
+  _id?: string;
+  name: string;
+  description: string;
+  owner: PopulatedUser;
+  members: TeamMember[];
+  joinRequests?: JoinRequest[];
+  requiredSkills: string[];
+  maxMembers: number;
+  status: 'recruiting' | 'active' | 'completed' | 'archived';
+  project?: PopulatedProject | null;
+  tags: string[];
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+
+// Populated sub-document shapes (from backend .populate() calls)
+export interface PopulatedUser {
+  id: string;
+  _id?: string;
+  name: string;
+  email: string;
+  avatar?: string;
+}
+
+export interface PopulatedProject {
+  id: string;
+  _id?: string;
+  title: string;
+  description: string;
+}
+
+// Match result from POST /api/teams/match
+export interface TeamMatchResult {
+  team: Team;
+  matchScore: number;
+  matchedSkills: string[];
+  missingSkills: string[];
 }
 
 // ============ API Types ============
@@ -113,6 +151,7 @@ export interface TeamMember {
 export interface ApiResponse<T> {
   data: T;
   message?: string;
+  status?: string;
 }
 
 export interface ApiError {
