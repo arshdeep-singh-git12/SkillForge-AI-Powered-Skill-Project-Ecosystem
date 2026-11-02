@@ -64,7 +64,7 @@ const toggleLikeProject = async (req, res) => {
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
     const userId = req.user.id;
-    const hasLiked = project.likes && project.likes.includes(userId);
+    const hasLiked = project.likes && project.likes.some(id => id.toString() === userId.toString());
 
     if (hasLiked) {
       project.likes = project.likes.filter(id => id.toString() !== userId.toString());

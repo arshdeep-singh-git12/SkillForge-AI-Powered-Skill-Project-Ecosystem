@@ -63,7 +63,7 @@ const requestJoin = async (req, res) => {
       return res.status(400).json({ message: 'Team is full' });
     }
 
-    if (team.members.includes(req.user.id)) {
+    if (team.members.some(memberId => memberId.toString() === req.user.id.toString())) {
       return res.status(400).json({ message: 'You are already a member' });
     }
 
@@ -117,7 +117,7 @@ const acceptJoinRequest = async (req, res) => {
 
     const applicantId = notification.sender;
 
-    if (team.members.includes(applicantId)) {
+    if (team.members.some(memberId => memberId.toString() === applicantId.toString())) {
       return res.status(400).json({ message: 'User is already a member' });
     }
 
