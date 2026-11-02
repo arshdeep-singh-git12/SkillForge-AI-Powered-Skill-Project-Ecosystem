@@ -170,7 +170,7 @@ export default function LoginPage() {
 
           <div className="bg-gray-50 border-t border-gray-100 px-8 py-6 text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-gray-900 font-bold hover:underline transition-all">
                 Sign Up
               </Link>

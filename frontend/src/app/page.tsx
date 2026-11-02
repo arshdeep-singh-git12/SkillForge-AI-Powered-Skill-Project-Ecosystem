@@ -1,9 +1,7 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 
-import React, { useEffect, useRef } from 'react';
-import Link from 'next/link';
 
 export default function VertexLandingPage() {
   const canvasRef = useRef<HTMLDivElement>(null);

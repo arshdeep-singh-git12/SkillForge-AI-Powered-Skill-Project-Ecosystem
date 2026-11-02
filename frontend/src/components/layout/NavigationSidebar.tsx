@@ -11,16 +11,13 @@ export default function NavigationSidebar() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
-  // Hide the sidebar on public routes
-  if (pathname === '/' || pathname === '/login' || pathname === '/signup') {
-    return null;
-  }
+  const isPublicRoute = pathname === '/' || pathname === '/login' || pathname === '/signup';
 
   const [unreadNotifCount, setUnreadNotifCount] = React.useState(0);
   const [unreadMsgCount, setUnreadMsgCount] = React.useState(0);
   
   React.useEffect(() => {
-    if (!user) return;
+    if (!user || isPublicRoute) return;
     
     let isMounted = true;
     
@@ -49,7 +46,12 @@ export default function NavigationSidebar() {
       window.removeEventListener('messagesRead', fetchCounts);
       window.removeEventListener('notificationsRead', fetchCounts);
     };
-  }, [user, pathname]);
+  }, [user, pathname, isPublicRoute]);
+
+  // Hide the sidebar on public routes
+  if (isPublicRoute) {
+    return null;
+  }
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },

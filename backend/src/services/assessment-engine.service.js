@@ -120,7 +120,7 @@ const processProject = async (userId, projectId) => {
         {"score": 85}`;
 
         const result = await model.generateContent(prompt);
-        const responseText = result.response.text().replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
+        const responseText = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
         const parsedResponse = JSON.parse(responseText);
         
         if (parsedResponse.score && !isNaN(parsedResponse.score)) {

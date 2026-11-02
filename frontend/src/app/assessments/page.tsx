@@ -414,7 +414,7 @@ export default function AssessmentsPage() {
 
             <h3 className="text-2xl font-bold text-white mb-2 relative z-10">Challenge Passed!</h3>
             <p className="text-gray-400 text-sm mb-6 relative z-10">
-              Outstanding work! You've earned the <strong>{selectedAssessment?.title}</strong> trophy and boosted your skill radar!
+              Outstanding work! You&apos;ve earned the <strong>{selectedAssessment?.title}</strong> trophy and boosted your skill radar!
             </p>
 
             <button

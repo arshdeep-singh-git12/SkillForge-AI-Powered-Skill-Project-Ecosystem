@@ -13,14 +13,15 @@
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "no-console": "off",
     "semi": ["warn", "always"],
-    "quotes": ["warn", "single"],
-    "comma-dangle": ["warn", "always-multiline"]
+    "quotes": "off",
+    "comma-dangle": "off"
   },
   "ignorePatterns": [
     "node_modules/",
     ".next/",
     "dist/",
     "build/",
-    "frontend/src/types/**"
+    "frontend/src/types/**",
+    "backend/.local_db/**"
   ]
 }

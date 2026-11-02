@@ -45,7 +45,7 @@ const executeCode = (language, version, code, stdin = '') => {
 
         child.on('close', (code) => {
           // Cleanup
-          try { fs.unlinkSync(tmpFile); } catch(e){}
+          try { fs.unlinkSync(tmpFile); } catch(e){ /* ignore */ }
           
           resolve({
             run: {
@@ -57,7 +57,7 @@ const executeCode = (language, version, code, stdin = '') => {
         });
         
         child.on('error', (err) => {
-          try { fs.unlinkSync(tmpFile); } catch(e){}
+          try { fs.unlinkSync(tmpFile); } catch(e){ /* ignore */ }
           reject(new Error('Failed to spawn python process: ' + err.message));
         });
       } else {

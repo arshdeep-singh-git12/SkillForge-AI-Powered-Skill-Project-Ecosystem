@@ -101,7 +101,7 @@ export default function OnboardingPage() {
                 Welcome, {user.name.split(' ')[0]}!
               </h1>
               <p className="text-gray-500 text-sm">
-                Let's finish setting up your profile so you can stand out in the community.
+                Let&apos;s finish setting up your profile so you can stand out in the community.
               </p>
             </div>
 

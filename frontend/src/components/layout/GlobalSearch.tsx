@@ -136,7 +136,7 @@ export default function GlobalSearch() {
 
       {isOpen && query.length >= 2 && results.users.length === 0 && results.projects.length === 0 && !loading && (
         <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-6 text-center z-[100]">
-          <p className="text-gray-500 text-sm font-sans">No results found for "{query}"</p>
+          <p className="text-gray-500 text-sm font-sans">No results found for &quot;{query}&quot;</p>
         </div>
       )}
     </div>
