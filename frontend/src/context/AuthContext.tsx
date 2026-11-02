@@ -42,13 +42,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const urlToken = urlParams.get('token');
           if (urlToken) {
             localStorage.setItem('skillforge_token', urlToken);
+            document.cookie = `token=${urlToken}; path=/; max-age=604800; SameSite=Lax`;
             window.history.replaceState({}, document.title, window.location.pathname);
           }
         }
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
-        // Not logged in or session expired
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('skillforge_token');
+          document.cookie = 'token=; path=/; max-age=0; SameSite=Lax';
+        }
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -61,10 +66,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { logoutUser } = await import('../services/auth.service');
       await logoutUser();
-    } catch (e) {
-      console.error('Logout failed:', e);
+    } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('skillforge_token');
+        document.cookie = 'token=; path=/; max-age=0; SameSite=Lax';
+        window.location.href = '/login';
+      }
+      setUser(null);
     }
-    setUser(null);
   };
 
   return (

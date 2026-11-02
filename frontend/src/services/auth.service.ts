@@ -4,6 +4,7 @@ export const loginUser = async (email: string, password: string) => {
   const response = await api.post('/auth/login', { email, password });
   if (typeof window !== 'undefined' && response.data?.token) {
     localStorage.setItem('skillforge_token', response.data.token);
+    document.cookie = `token=${response.data.token}; path=/; max-age=604800; SameSite=Lax`;
   }
   return response.data;
 };
@@ -12,6 +13,7 @@ export const registerUser = async (name: string, email: string, password: string
   const response = await api.post('/auth/register', { name, email, password, avatar });
   if (typeof window !== 'undefined' && response.data?.token) {
     localStorage.setItem('skillforge_token', response.data.token);
+    document.cookie = `token=${response.data.token}; path=/; max-age=604800; SameSite=Lax`;
   }
   return response.data;
 };
@@ -19,6 +21,7 @@ export const registerUser = async (name: string, email: string, password: string
 export const logoutUser = async () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('skillforge_token');
+    document.cookie = 'token=; path=/; max-age=0; SameSite=Lax';
   }
   try {
     await api.post('/auth/logout');

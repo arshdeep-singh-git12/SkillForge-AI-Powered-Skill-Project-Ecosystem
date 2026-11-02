@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Add the paths that should not require authentication
-const publicPaths = ['/', '/login', '/signup', '/api'];
-
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
   
   // Exclude static files, images, next system files, etc.
   if (
@@ -16,34 +13,26 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get the token from cookies
-  const token = request.cookies.get('token')?.value;
-
-  const isPublicPath = publicPaths.some(path => 
-    pathname === path || pathname.startsWith(`${path}/`) && path !== '/'
-  );
-
-  // If user is trying to access a private route without a token, redirect to login
-  if (!isPublicPath && (!token || token === 'none')) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  // If token is in query params (e.g. OAuth callback redirect to /dashboard?token=...),
+  // set cookie on the frontend domain and proceed directly without blocking
+  const urlToken = searchParams.get('token');
+  if (urlToken) {
+    const response = NextResponse.next();
+    response.cookies.set('token', urlToken, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: 'lax',
+    });
+    return response;
   }
 
-  // Removed naive check that redirects to dashboard based solely on token existence.
-  // This prevents infinite redirect loops when the token is expired/invalid.
-
+  // Client-side authentication and route guarding is handled by ClientLayoutWrapper
+  // and AuthContext, which support both localStorage JWT tokens and cross-origin OAuth.
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
