@@ -42,7 +42,7 @@ const register = async (req, res) => {
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
       });
 
       res.status(201).json({
@@ -54,7 +54,8 @@ const register = async (req, res) => {
         githubUrl: user.githubUrl,
         linkedinUrl: user.linkedinUrl,
         leetcodeUrl: user.leetcodeUrl,
-        hackerrankUrl: user.hackerrankUrl
+        hackerrankUrl: user.hackerrankUrl,
+        token
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -80,7 +81,7 @@ const login = async (req, res) => {
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
       });
 
       res.json({
@@ -92,7 +93,8 @@ const login = async (req, res) => {
         githubUrl: user.githubUrl,
         linkedinUrl: user.linkedinUrl,
         leetcodeUrl: user.leetcodeUrl,
-        hackerrankUrl: user.hackerrankUrl
+        hackerrankUrl: user.hackerrankUrl,
+        token
       });
     } else {
       res.status(401).json({ message: 'Invalid credentials' });
@@ -105,7 +107,9 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   });
   res.json({ message: 'Logout successful' });
 };

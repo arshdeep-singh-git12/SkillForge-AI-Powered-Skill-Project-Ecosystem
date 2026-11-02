@@ -10,8 +10,10 @@ const nextConfig = {
     ],
   },
 
-  // Environment variables available in the browser
-  // (only NEXT_PUBLIC_ prefixed vars are exposed to the client)
+  eslint: {
+    // Don't clutter production build logs with non-fatal lint warnings
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;

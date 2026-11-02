@@ -37,6 +37,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        if (typeof window !== 'undefined') {
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlToken = urlParams.get('token');
+          if (urlToken) {
+            localStorage.setItem('skillforge_token', urlToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
         const userData = await getMe();
         setUser(userData);
       } catch (error) {
