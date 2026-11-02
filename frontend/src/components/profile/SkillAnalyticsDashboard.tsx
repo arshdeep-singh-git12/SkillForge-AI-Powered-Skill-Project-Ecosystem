@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getSkillAnalysis } from '../../services/profile.service';
 import SkillRadarChart, { RadarMetric } from './SkillRadarChart';
 
@@ -56,7 +56,7 @@ export default function SkillAnalyticsDashboard({ userId, skillsCount }: SkillAn
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalysis = async (refresh = false) => {
+  const fetchAnalysis = useCallback(async (refresh = false) => {
     try {
       if (refresh) setRefreshing(true);
       else setLoading(true);
@@ -71,7 +71,7 @@ export default function SkillAnalyticsDashboard({ userId, skillsCount }: SkillAn
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     if (userId && skillsCount > 0) {
@@ -79,7 +79,7 @@ export default function SkillAnalyticsDashboard({ userId, skillsCount }: SkillAn
     } else {
       setLoading(false);
     }
-  }, [userId, skillsCount]);
+  }, [userId, skillsCount, fetchAnalysis]);
 
   if (skillsCount === 0) {
     return null;

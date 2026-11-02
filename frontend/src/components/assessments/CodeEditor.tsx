@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react';
 interface CodeEditorProps {
   language: string;
   code: string;
-  onChange: (code: string) => void;
+  onChange: (_code: string) => void;
 }
 
 export default function CodeEditor({ language, code, onChange }: CodeEditorProps) {
@@ -23,22 +23,18 @@ export default function CodeEditor({ language, code, onChange }: CodeEditorProps
         <Editor
           height="100%"
           language={getMonacoLanguage(language)}
-          theme="vs-dark"
           value={code}
           onChange={(val) => onChange(val || '')}
+          theme="vs-dark"
           options={{
             minimap: { enabled: false },
             fontSize: 14,
-            fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
-            lineHeight: 24,
-            padding: { top: 16 },
+            lineNumbers: 'on',
             scrollBeyondLastLine: false,
-            smoothScrolling: true,
-            cursorBlinking: "smooth",
-            cursorSmoothCaretAnimation: "on",
-            formatOnPaste: true,
+            automaticLayout: true,
+            tabSize: 4,
+            wordWrap: 'on'
           }}
-          loading={<div className="h-full w-full flex items-center justify-center text-gray-400 font-mono animate-pulse">Loading Editor...</div>}
         />
       </div>
     </div>

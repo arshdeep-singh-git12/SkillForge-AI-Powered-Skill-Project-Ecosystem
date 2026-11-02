@@ -7,12 +7,12 @@ interface TeamDetailsSidebarProps {
   team: any;
   isOpen: boolean;
   onClose: () => void;
-  onJoinRequest: (teamId: string, formData: any) => Promise<void>;
+  onJoinRequest: (_teamId: string, _formData: any) => Promise<void>;
   isMember: boolean;
   isFull: boolean;
   isOwner?: boolean;
   isClosed?: boolean;
-  onCloseTeam?: (teamId: string) => void;
+  onCloseTeam?: (_teamId: string) => void;
 }
 
 export default function TeamDetailsSidebar({ team, isOpen, onClose, onJoinRequest, isMember, isFull, isOwner, isClosed, onCloseTeam }: TeamDetailsSidebarProps) {

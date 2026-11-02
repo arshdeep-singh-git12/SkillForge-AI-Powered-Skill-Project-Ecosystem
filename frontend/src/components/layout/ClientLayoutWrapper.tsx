@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import NavigationSidebar from './NavigationSidebar';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from './ThemeToggle';
@@ -9,7 +9,6 @@ import GlobalSearch from './GlobalSearch';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
   const isPublic = pathname === '/' || pathname === '/login' || pathname === '/signup';
@@ -28,24 +27,21 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     <>
       {!isLanding && <ThemeToggle />}
       <div style={{ display: showSpinner ? 'none' : 'block', width: '100%' }}>
-        <div className={`flex w-full ${!isPublic ? 'min-h-screen interior-bg p-4 gap-4' : isLanding ? 'h-screen overflow-hidden bg-[#020204]' : 'min-h-screen'}`}>
-          {!isPublic && <NavigationSidebar />}
-          <main className={`flex-1 w-full relative transition-all duration-300 ${!isPublic ? 'h-[calc(100vh-2rem)] overflow-y-auto interior-panel' : isLanding ? 'h-screen overflow-hidden' : ''}`}>
-            {!isLanding && !isPublic && (
-              <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-xl hidden md:block">
-                <GlobalSearch />
-              </div>
-            )}
-            <div className={!isLanding && !isPublic && !pathname.includes('/profile') ? "pt-24" : ""}>
-              {children}
-            </div>
-          </main>
-        </div>
+        {!isPublic && <GlobalSearch />}
+        <NavigationSidebar />
+        <main className={`min-h-screen ${!isPublic ? 'pl-64 pt-16' : ''}`}>
+          {children}
+        </main>
       </div>
-      
+
       {showSpinner && (
-        <div className="flex min-h-screen w-full items-center justify-center bg-[#f3f4f6]">
-          <div className="animate-pulse w-10 h-10 rounded-full border-4 border-gray-200 border-t-[#0cbde8]"></div>
+        <div className="min-h-screen bg-slate-50 dark:bg-[#0d1117] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-10 h-10 border-4 border-cyan/20 border-t-cyan rounded-full animate-spin"></div>
+            <p className="text-gray-500 dark:text-gray-400 font-medium text-sm animate-pulse">
+              Authenticating session...
+            </p>
+          </div>
         </div>
       )}
     </>

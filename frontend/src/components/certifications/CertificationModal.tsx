@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface CertificationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (cert: any) => Promise<void>;
+  onSubmit: (_cert: any) => Promise<void>;
 }
 
 export default function CertificationModal({ isOpen, onClose, onSubmit }: CertificationModalProps) {
@@ -21,10 +21,10 @@ export default function CertificationModal({ isOpen, onClose, onSubmit }: Certif
     setLoading(true);
     await onSubmit({ 
       title, 
-      issuer,
-      description,
-      dateEarned,
-      credentialUrl
+      issuer, 
+      description, 
+      dateEarned, 
+      credentialUrl 
     });
     setLoading(false);
     
@@ -38,89 +38,81 @@ export default function CertificationModal({ isOpen, onClose, onSubmit }: Certif
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4">
-      <div className="bg-white border border-gray-100 rounded-[24px] p-8 w-full max-w-lg shadow-[0_12px_40px_rgb(0,0,0,0.12)] relative">
-        <button 
-          onClick={onClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 font-serif">Add External Certification</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative border border-gray-100 animate-fadeIn">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Add External Certification</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Certification Title</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Certificate Title</label>
+            <input
+              type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., AWS Certified Solutions Architect"
               required
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="e.g. AWS Certified Developer"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
-          
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Issuer</label>
-            <input 
-              type="text" 
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Issuing Organization</label>
+            <input
+              type="text"
               value={issuer}
               onChange={(e) => setIssuer(e.target.value)}
+              placeholder="e.g., Amazon Web Services (AWS)"
               required
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="e.g. Coursera, Amazon, Google"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Date Earned</label>
-            <input 
-              type="date" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date Earned</label>
+            <input
+              type="date"
               value={dateEarned}
               onChange={(e) => setDateEarned(e.target.value)}
-              required
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Credential / Verification URL (Optional)</label>
-            <input 
-              type="url" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Credential URL (optional)</label>
+            <input
+              type="url"
               value={credentialUrl}
               onChange={(e) => setCredentialUrl(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="https://coursera.org/verify/..."
-            />
-          </div>
-          
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Description (Optional)</label>
-            <textarea 
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={2}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors resize-none"
-              placeholder="What skills did this cover?"
+              placeholder="https://www.credly.com/badges/..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="pt-6 flex justify-end gap-3">
-            <button 
-              type="button" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Key competencies demonstrated or technologies mastered..."
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              disabled={loading || !title || !issuer || !dateEarned}
-              className="bg-gray-900 hover:bg-gray-800 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md disabled:opacity-50"
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-50"
             >
-              {loading ? 'Adding...' : 'Add Certification'}
+              {loading ? 'Adding...' : 'Add Certificate'}
             </button>
           </div>
         </form>

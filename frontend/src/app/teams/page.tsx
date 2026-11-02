@@ -5,7 +5,7 @@ import { getTeams, createTeam, joinTeam, closeTeam } from '../../services/team.s
 import CreateTeamModal from '../../components/teams/CreateTeamModal';
 import TeamDetailsSidebar from '../../components/teams/TeamDetailsSidebar';
 import { useAuth } from '../../context/AuthContext';
-import api from '../../services/api';
+
 
 export default function TeamsPage() {
   const { user } = useAuth();

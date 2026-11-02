@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (project: any) => Promise<void>;
+  onSubmit: (_project: any) => Promise<void>;
 }
 
 export default function ProjectModal({ isOpen, onClose, onSubmit }: ProjectModalProps) {
@@ -24,9 +24,9 @@ export default function ProjectModal({ isOpen, onClose, onSubmit }: ProjectModal
       title, 
       description, 
       techStack: techStack.split(',').map(s => s.trim()).filter(Boolean),
-      githubUrl,
-      liveUrl,
-      thumbnail
+      githubUrl, 
+      liveUrl, 
+      thumbnail 
     });
     setLoading(false);
     
@@ -41,100 +41,94 @@ export default function ProjectModal({ isOpen, onClose, onSubmit }: ProjectModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4">
-      <div className="bg-white border border-gray-100 rounded-[24px] p-8 w-full max-w-lg shadow-[0_12px_40px_rgb(0,0,0,0.12)] relative max-h-[90vh] overflow-y-auto custom-scrollbar">
-        <button 
-          onClick={onClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 font-serif">Upload Project</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative border border-gray-100 animate-fadeIn">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Add Portfolio Project</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Project Title</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Project Title</label>
+            <input
+              type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., AI Mock Interview Platform"
               required
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="e.g. AI Portfolio Builder"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
-          
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Description</label>
-            <textarea 
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe architecture, user flow, problem solved..."
               required
-              rows={4}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors resize-none"
-              placeholder="What does your project do?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Tech Stack (comma separated)</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tech Stack (comma-separated)</label>
+            <input
+              type="text"
               value={techStack}
               onChange={(e) => setTechStack(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="React, Node.js, MongoDB"
+              placeholder="Next.js, TailwindCSS, Node.js, MongoDB"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">GitHub URL</label>
-            <input 
-              type="url" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">GitHub URL</label>
+            <input
+              type="url"
               value={githubUrl}
               onChange={(e) => setGithubUrl(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="https://github.com/username/repo"
+              placeholder="https://github.com/username/project"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Live Demo URL</label>
-            <input 
-              type="url" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Live Demo URL</label>
+            <input
+              type="url"
               value={liveUrl}
               onChange={(e) => setLiveUrl(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="https://my-project.vercel.app"
+              placeholder="https://myproject.vercel.app"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Thumbnail Image URL</label>
-            <input 
-              type="url" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Thumbnail Image URL</label>
+            <input
+              type="url"
               value={thumbnail}
               onChange={(e) => setThumbnail(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="https://example.com/image.jpg"
+              placeholder="https://images.unsplash.com/..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
-          
-          <div className="pt-6 flex justify-end gap-3">
-            <button 
-              type="button" 
+
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              disabled={loading || !title || !description}
-              className="bg-gray-900 hover:bg-gray-800 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md disabled:opacity-50"
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-50"
             >
-              {loading ? 'Uploading...' : 'Publish Project'}
+              {loading ? 'Adding...' : 'Add Project'}
             </button>
           </div>
         </form>

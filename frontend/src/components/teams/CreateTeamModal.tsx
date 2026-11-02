@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface CreateTeamModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (team: any) => Promise<void>;
+  onSubmit: (_team: any) => Promise<void>;
 }
 
 export default function CreateTeamModal({ isOpen, onClose, onSubmit }: CreateTeamModalProps) {
@@ -35,84 +35,74 @@ export default function CreateTeamModal({ isOpen, onClose, onSubmit }: CreateTea
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm p-4">
-      <div className="bg-white border border-gray-100 rounded-[24px] p-8 w-full max-w-lg shadow-[0_12px_40px_rgb(0,0,0,0.12)] relative">
-        <button 
-          onClick={onClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 font-serif">Create a New Team</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative border border-gray-100 animate-fadeIn">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Create New Team</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Team Name</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Team Name</label>
+            <input
+              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., NextGen AI Hackers"
               required
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="e.g. Frontend Wizards"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
-          
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Team Description & Goals</label>
-            <textarea 
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Project / Objective Description</label>
+            <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="What is your team building? Describe your goals, hackathon project, or startup idea..."
               required
-              rows={4}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors resize-none"
-              placeholder="What are you building? Who are you looking for?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 block">Required Skills (comma separated)</label>
-            <input 
-              type="text" 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Required Skills (comma-separated)</label>
+            <input
+              type="text"
               value={requiredSkills}
               onChange={(e) => setRequiredSkills(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
-              placeholder="React, Python, UI/UX"
+              placeholder="React, Python, PyTorch, Figma"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
             />
           </div>
 
-          <div className="space-y-1.5 pt-2">
-            <label className="text-sm font-medium text-gray-700 block">Max Members</label>
-            <div className="flex items-center gap-4">
-              <input 
-                type="range" 
-                min="2" 
-                max="10" 
-                value={maxMembers}
-                onChange={(e) => setMaxMembers(Number(e.target.value))}
-                className="flex-1 accent-cyan h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-              <div className="w-12 h-10 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200 text-[#0cbde8] font-bold shadow-sm">
-                {maxMembers}
-              </div>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Team Size</label>
+            <input
+              type="number"
+              min={2}
+              max={10}
+              value={maxMembers}
+              onChange={(e) => setMaxMembers(parseInt(e.target.value))}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-gray-900"
+            />
           </div>
-          
-          <div className="pt-6 flex justify-end gap-3">
-            <button 
-              type="button" 
+
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              disabled={loading || !name || !description}
-              className="bg-gray-900 hover:bg-gray-800 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md disabled:opacity-50"
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-50"
             >
-              {loading ? 'Creating...' : 'Launch Team'}
+              {loading ? 'Creating...' : 'Create Team'}
             </button>
           </div>
         </form>

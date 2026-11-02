@@ -63,10 +63,10 @@ export default function ProfilePage() {
       if (!user) return;
       setLoadingData(true);
       try {
-        if (activeTab === 'projects' && projects.length === 0) {
+        if (activeTab === 'projects' && true) {
           const data = await getUserProjects(user._id);
           setProjects(data);
-        } else if (activeTab === 'certificates' && certificates.length === 0) {
+        } else if (activeTab === 'certificates' && true) {
           const data = await getCertifications();
           setCertificates(data);
         }
