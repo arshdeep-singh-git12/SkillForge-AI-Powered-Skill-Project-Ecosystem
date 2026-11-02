@@ -19,7 +19,20 @@ const handleOAuthCallback = (req, res) => {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   });
 
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  let frontendUrl = process.env.FRONTEND_URL;
+  if (!frontendUrl || frontendUrl === '*' || !frontendUrl.startsWith('http')) {
+    if (req.headers.referer) {
+      try {
+        const refUrl = new URL(req.headers.referer);
+        frontendUrl = refUrl.origin;
+      } catch (e) {
+        frontendUrl = 'https://skill-forge-ai-powered-skill-projec-two.vercel.app';
+      }
+    } else {
+      frontendUrl = 'https://skill-forge-ai-powered-skill-projec-two.vercel.app';
+    }
+  }
+  frontendUrl = frontendUrl.replace(/\/+$/, '');
   res.redirect(`${frontendUrl}/dashboard?token=${token}`);
 };
 
@@ -39,7 +52,11 @@ const handleDemoOAuthLogin = async (name, email, avatar, req, res) => {
     return handleOAuthCallback(req, res);
   } catch (err) {
     console.error('Demo OAuth error:', err);
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    let frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl || frontendUrl === '*' || !frontendUrl.startsWith('http')) {
+      frontendUrl = 'https://skill-forge-ai-powered-skill-projec-two.vercel.app';
+    }
+    frontendUrl = frontendUrl.replace(/\/+$/, '');
     res.redirect(`${frontendUrl}/login?error=oauth_failed`);
   }
 };
