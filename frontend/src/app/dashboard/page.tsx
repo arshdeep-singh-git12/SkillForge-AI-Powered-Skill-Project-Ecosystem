@@ -16,14 +16,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Force onboarding check
-  useEffect(() => {
-    if (!authLoading && user) {
-      if (!user.avatar || !user.bio) {
-        router.push('/onboarding');
-      }
-    }
-  }, [user, authLoading, router]);
+  
 
   useEffect(() => {
     const fetchProjects = async () => {
