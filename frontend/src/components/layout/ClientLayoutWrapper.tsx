@@ -11,24 +11,26 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const pathname = usePathname();
   const { user, loading: authLoading } = useAuth();
 
-  const isPublic = pathname === '/' || pathname === '/login' || pathname === '/signup';
+  const isPublic = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/onboarding';
   const isLanding = pathname === '/';
 
   React.useEffect(() => {
-    if (!authLoading && !isPublic && !user) {
+    const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('skillforge_token');
+    if (!authLoading && !isPublic && !user && !hasToken) {
       window.location.href = '/login';
     }
   }, [authLoading, isPublic, user]);
 
-  // Show spinner if we are redirecting OR if we are still checking auth on a private route
-  const showSpinner = (!isPublic && authLoading) || (!authLoading && !isPublic && !user);
+  const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('skillforge_token');
+  // Show spinner only on private routes while loading
+  const showSpinner = !isPublic && (authLoading || (!user && hasToken));
 
   return (
     <>
       {!isLanding && <ThemeToggle />}
       <div style={{ display: showSpinner ? 'none' : 'block', width: '100%' }}>
         {!isPublic && <GlobalSearch />}
-        <NavigationSidebar />
+        {!isPublic && <NavigationSidebar />}
         <main className={`min-h-screen ${!isPublic ? 'pl-64 pt-16' : ''}`}>
           {children}
         </main>

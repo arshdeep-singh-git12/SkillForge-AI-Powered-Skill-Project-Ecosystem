@@ -23,7 +23,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     }
   }, [user, authLoading, router]);
 
@@ -35,7 +35,7 @@ export default function LoginPage() {
     try {
       const data = await loginUser(email, password);
       setUser(data);
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to login');
     } finally {

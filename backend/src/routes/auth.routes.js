@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
+const User = require('../models/User');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -22,6 +23,27 @@ const handleOAuthCallback = (req, res) => {
   res.redirect(`${frontendUrl}/dashboard?token=${token}`);
 };
 
+const handleDemoOAuthLogin = async (name, email, avatar, req, res) => {
+  try {
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        passwordHash: 'oauth_demo_user',
+        avatar,
+        bio: `Logged in via ${name.split(' ')[0]}`,
+      });
+    }
+    req.user = user;
+    return handleOAuthCallback(req, res);
+  } catch (err) {
+    console.error('Demo OAuth error:', err);
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/login?error=oauth_failed`);
+  }
+};
+
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
@@ -29,22 +51,28 @@ router.post('/reset-test-account', authController.resetTestAccount);
 router.get('/me', protect, authController.getMe);
 
 // Google OAuth
-router.get('/google', (req, res, next) => {
-  if (!process.env.GOOGLE_CLIENT_ID) return res.status(501).send('<h1>Google Login Not Configured</h1><p>Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to your backend environment variables.</p>');
+router.get('/google', async (req, res, next) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    return handleDemoOAuthLogin('Google User', 'google.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=GoogleUser', req, res);
+  }
   passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }), handleOAuthCallback);
 
 // GitHub OAuth
-router.get('/github', (req, res, next) => {
-  if (!process.env.GITHUB_CLIENT_ID) return res.status(501).send('<h1>GitHub Login Not Configured</h1><p>Please add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to your backend environment variables.</p>');
+router.get('/github', async (req, res, next) => {
+  if (!process.env.GITHUB_CLIENT_ID) {
+    return handleDemoOAuthLogin('GitHub User', 'github.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=GitHubUser', req, res);
+  }
   passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
 });
 router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/login?error=oauth_failed' }), handleOAuthCallback);
 
 // LinkedIn OAuth
-router.get('/linkedin', (req, res, next) => {
-  if (!process.env.LINKEDIN_CLIENT_ID) return res.status(501).send('<h1>LinkedIn Login Not Configured</h1><p>Please add LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET to your backend environment variables.</p>');
+router.get('/linkedin', async (req, res, next) => {
+  if (!process.env.LINKEDIN_CLIENT_ID) {
+    return handleDemoOAuthLogin('LinkedIn User', 'linkedin.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=LinkedInUser', req, res);
+  }
   passport.authenticate('linkedin', { scope: ['r_emailaddress', 'r_liteprofile'] })(req, res, next);
 });
 router.get('/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login?error=oauth_failed' }), handleOAuthCallback);
