@@ -41,6 +41,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         name: profile.displayName,
         email: profile.emails[0].value,
         googleId: profile.id,
+        avatar: (profile.photos && profile.photos[0]) ? profile.photos[0].value : '',
+        bio: '',
       });
 
       done(null, user);

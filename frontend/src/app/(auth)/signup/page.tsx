@@ -30,7 +30,7 @@ export default function SignupPage() {
     try {
       const data = await registerUser(name, email, password);
       setUser(data);
-      window.location.href = '/dashboard';
+      window.location.href = '/onboarding';
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create account');
     } finally {

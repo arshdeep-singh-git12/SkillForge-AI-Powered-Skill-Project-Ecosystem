@@ -33,7 +33,10 @@ const handleOAuthCallback = (req, res) => {
     }
   }
   frontendUrl = frontendUrl.replace(/\/+$/, '');
-  res.redirect(`${frontendUrl}/dashboard?token=${token}`);
+  
+  // If user hasn't completed bio, send to onboarding
+  const targetPath = (req.user && !req.user.bio) ? '/onboarding' : '/dashboard';
+  res.redirect(`${frontendUrl}${targetPath}?token=${token}`);
 };
 
 const handleDemoOAuthLogin = async (name, email, avatar, req, res) => {
@@ -43,15 +46,15 @@ const handleDemoOAuthLogin = async (name, email, avatar, req, res) => {
       user = await User.create({
         name,
         email,
-        passwordHash: 'oauth_demo_user',
+        passwordHash: 'oauth_user',
         avatar,
-        bio: `Logged in via ${name.split(' ')[0]}`,
+        bio: '', // Empty bio so onboarding is required
       });
     }
     req.user = user;
     return handleOAuthCallback(req, res);
   } catch (err) {
-    console.error('Demo OAuth error:', err);
+    console.error('OAuth login error:', err);
     let frontendUrl = process.env.FRONTEND_URL;
     if (!frontendUrl || frontendUrl === '*' || !frontendUrl.startsWith('http')) {
       frontendUrl = 'https://skill-forge-ai-powered-skill-projec-two.vercel.app';
@@ -69,16 +72,16 @@ router.get('/me', protect, authController.getMe);
 
 // Google OAuth
 router.get('/google', async (req, res, next) => {
-  if (!process.env.GOOGLE_CLIENT_ID) {
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     return handleDemoOAuthLogin('Google User', 'google.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=GoogleUser', req, res);
   }
-  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+  passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' })(req, res, next);
 });
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }), handleOAuthCallback);
 
 // GitHub OAuth
 router.get('/github', async (req, res, next) => {
-  if (!process.env.GITHUB_CLIENT_ID) {
+  if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
     return handleDemoOAuthLogin('GitHub User', 'github.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=GitHubUser', req, res);
   }
   passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
@@ -87,7 +90,7 @@ router.get('/github/callback', passport.authenticate('github', { failureRedirect
 
 // LinkedIn OAuth
 router.get('/linkedin', async (req, res, next) => {
-  if (!process.env.LINKEDIN_CLIENT_ID) {
+  if (!process.env.LINKEDIN_CLIENT_ID || !process.env.LINKEDIN_CLIENT_SECRET) {
     return handleDemoOAuthLogin('LinkedIn User', 'linkedin.user@skillforge.io', 'https://api.dicebear.com/7.x/avataaars/svg?seed=LinkedInUser', req, res);
   }
   passport.authenticate('linkedin', { scope: ['r_emailaddress', 'r_liteprofile'] })(req, res, next);

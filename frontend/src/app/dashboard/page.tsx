@@ -19,6 +19,12 @@ export default function DashboardPage() {
   
 
   useEffect(() => {
+    if (!authLoading && user && !user.bio) {
+      router.push('/onboarding');
+    }
+  }, [user, authLoading, router]);
+
+  useEffect(() => {
     const fetchProjects = async () => {
       try {
         const data = await getProjects();
