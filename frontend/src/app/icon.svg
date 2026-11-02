@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="sw-light" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38bdf8" />
+      <stop offset="0.5" stop-color="#0284c7" />
+      <stop offset="1" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="sw2-light" x1="40" y1="10" x2="10" y2="40">
+      <stop offset="0" stop-color="#7dd3fc" stop-opacity="0.6" />
+      <stop offset="1" stop-color="#0284c7" stop-opacity="0.6" />
+    </linearGradient>
+  </defs>
+  <g transform="rotate(-32 24 24)">
+    <ellipse cx="24" cy="24" rx="18.5" ry="9.6" stroke="url(#sw2-light)" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="58 30" stroke-dashoffset="14" fill="none" />
+    <circle cx="41.4" cy="20.6" r="3.1" fill="#0ea5e9" />
+  </g>
+  <circle cx="24" cy="24" r="6.6" fill="url(#sw-light)" />
+  <circle cx="24" cy="24" r="2.6" fill="#fff" />
+</svg>

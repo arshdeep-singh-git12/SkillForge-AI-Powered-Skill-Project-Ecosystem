@@ -1,29 +1,58 @@
+const axios = require('axios');
+const Project = require('../models/Project');
+const { processProject } = require('./assessment-engine.service');
+
 /**
- * GitHub Service
- * 
- * Integrates with the GitHub REST API to fetch repository and contribution data.
- * 
- * GitHub API:
- *   Base URL: https://api.github.com
- *   Docs: https://docs.github.com/en/rest
- *   Rate limits: 60/hr (unauthenticated), 5000/hr (with OAuth token)
- * 
- * Planned functions:
- *   getUserRepos(username, token?)   — Fetch user's public repositories
- *   getRepoDetails(owner, repo)      — Fetch repository details
- *   getCommitHistory(owner, repo)    — Fetch recent commits
- *   getUserStats(username)           — Aggregate contribution stats
- * 
- * @owner Team Member 6 — GitHub & Reviews
+ * Extracts a GitHub username from a GitHub profile URL.
+ * @param {string} url - The GitHub URL
+ * @returns {string|null} - The username or null
  */
+const extractGithubUsername = (url) => {
+  if (!url) return null;
+  const match = url.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_-]+)/i);
+  return match ? match[1] : null;
+};
 
-// const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = require('../config/env');
+/**
+ * Syncs the user's latest 5 public GitHub repositories into SkillForge Projects.
+ * @param {Object} user - The user document
+ */
+const syncGithubProjects = async (user) => {
+  try {
+    const username = extractGithubUsername(user.githubUrl);
+    if (!username) return;
 
-// TODO: Implement GitHub service functions
+    // Fetch the 100 most recently pushed public repositories
+    const response = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repos = response.data;
+
+    if (!Array.isArray(repos) || repos.length === 0) return;
+
+    for (const repo of repos) {
+      // Check if project already exists to avoid duplicates
+      const existingProject = await Project.findOne({ owner: user._id, title: repo.name });
+      if (!existingProject) {
+        const project = await Project.create({
+          owner: user._id,
+          title: repo.name,
+          description: repo.description || 'GitHub Repository',
+          techStack: repo.language ? [repo.language] : [],
+          githubUrl: repo.html_url,
+          liveUrl: repo.homepage || '',
+        });
+
+        // Trigger assessment for the new project
+        await processProject(user._id, project._id);
+      }
+    }
+    
+    console.log(`✅ GitHub Sync: Synced repositories for ${username}`);
+  } catch (error) {
+    console.error(`❌ GitHub Sync Error for user ${user._id}:`, error.message);
+  }
+};
 
 module.exports = {
-  // getUserRepos,
-  // getRepoDetails,
-  // getCommitHistory,
-  // getUserStats,
+  extractGithubUsername,
+  syncGithubProjects,
 };

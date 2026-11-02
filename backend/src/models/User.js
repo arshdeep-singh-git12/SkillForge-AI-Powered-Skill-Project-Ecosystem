@@ -17,6 +17,7 @@
  */
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -36,7 +37,6 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Never include in query results by default
     },
@@ -55,20 +55,82 @@ const userSchema = new mongoose.Schema(
         ref: 'Skill',
       },
     ],
+    googleId: {
+      type: String,
+      default: '',
+    },
+    githubId: {
+      type: String,
+      default: '',
+    },
+    linkedinId: {
+      type: String,
+      default: '',
+    },
     githubUsername: {
       type: String,
       default: '',
+    },
+    githubUrl: {
+      type: String,
+      default: '',
+    },
+    linkedinUrl: {
+      type: String,
+      default: '',
+    },
+    leetcodeUrl: {
+      type: String,
+      default: '',
+    },
+    hackerrankUrl: {
+      type: String,
+      default: '',
+    },
+    profileEvaluation: {
+      type: String,
+      default: '',
+    },
+    skillAnalysis: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    totalLikes: {
+      type: Number,
+      default: 0,
     },
     role: {
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
     },
+    connections: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    connectionRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt automatically
   },
 );
+
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('passwordHash') || !this.passwordHash) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+  next();
+});
 
 // Index for faster email lookups
 userSchema.index({ email: 1 });

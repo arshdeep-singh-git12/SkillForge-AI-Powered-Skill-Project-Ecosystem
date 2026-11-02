@@ -1,23 +1,14 @@
-/**
- * User Routes
- * 
- * Manages user profiles and account data.
- * 
- * Planned endpoints:
- *   GET    /api/users/:id  — Get user profile by ID
- *   PUT    /api/users/:id  — Update user profile
- *   DELETE /api/users/:id  — Delete user account
- * 
- * @owner Team Member 2 — Skill Profiles
- */
-
 const express = require('express');
 const router = express.Router();
-// const userController = require('../controllers/user.controller');
+const userController = require('../controllers/user.controller');
+const { protect } = require('../middleware/auth.middleware');
 
-// TODO: Implement user routes
-// router.get('/:id', userController.getUserById);
-// router.put('/:id', authMiddleware, userController.updateUser);
-// router.delete('/:id', authMiddleware, userController.deleteUser);
+router.get('/profile/completion', protect, userController.getProfileCompletion);
+router.get('/public/:id', userController.getPublicProfile);
+router.post('/:id/connect', protect, userController.sendConnectionRequest);
+router.post('/:id/respond', protect, userController.handleConnectionRequest);
+router.get('/:id', userController.getUserById);
+router.put('/profile', protect, userController.updateUser); // Changed to /profile to update own profile
+router.delete('/profile', protect, userController.deleteUser);
 
 module.exports = router;
