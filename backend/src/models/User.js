@@ -91,6 +91,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    skillAnalysis: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
     totalLikes: {
       type: Number,
       default: 0,

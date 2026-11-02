@@ -116,7 +116,7 @@ export default function TeamsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTeams.map((team) => {
             const isFull = team.members.length >= team.maxMembers;
-            const isMember = user && team.members.some((m: any) => m._id === user._id);
+            const isMember = Boolean(user && team.members.some((m: any) => m._id === user._id));
 
             return (
               <div key={team._id} className={`interior-panel flex flex-col group relative overflow-hidden p-6 transform hover:-translate-y-1 transition-all duration-300 ${team.status === 'closed' ? 'opacity-60 grayscale bg-gray-50' : ''}`}>
@@ -185,9 +185,9 @@ export default function TeamsPage() {
         isOpen={!!selectedTeam}
         onClose={() => setSelectedTeam(null)}
         onJoinRequest={handleJoinRequest}
-        isMember={selectedTeam ? (user && selectedTeam.members.some((m: any) => m._id === user._id)) : false}
+        isMember={selectedTeam ? Boolean(user && selectedTeam.members.some((m: any) => m._id === user._id)) : false}
         isFull={selectedTeam ? selectedTeam.members.length >= selectedTeam.maxMembers : false}
-        isOwner={selectedTeam ? (user && (selectedTeam.owner._id === user._id || selectedTeam.owner === user._id)) : false}
+        isOwner={selectedTeam ? Boolean(user && (selectedTeam.owner?._id === user._id || selectedTeam.owner === user._id)) : false}
         isClosed={selectedTeam?.status === 'closed'}
         onCloseTeam={handleCloseTeam}
       />

@@ -1,4 +1,5 @@
 const Skill = require('../models/Skill');
+const { analyzeSkillsWithAI } = require('../services/skill-analytics.service');
 
 const getUserSkills = async (req, res) => {
   try {
@@ -73,4 +74,16 @@ const deleteSkill = async (req, res) => {
   }
 };
 
-module.exports = { getUserSkills, addSkill, updateSkill, deleteSkill };
+const getSkillAnalysis = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const forceRefresh = req.query.refresh === 'true';
+    const analysis = await analyzeSkillsWithAI(userId, forceRefresh);
+    res.json(analysis);
+  } catch (error) {
+    console.error('Error generating skill analysis:', error);
+    res.status(500).json({ message: 'Failed to analyze skills', error: error.message });
+  }
+};
+
+module.exports = { getUserSkills, addSkill, updateSkill, deleteSkill, getSkillAnalysis };

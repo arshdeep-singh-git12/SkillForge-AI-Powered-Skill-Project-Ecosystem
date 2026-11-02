@@ -10,6 +10,15 @@ interface User {
   avatar?: string;
   bio?: string;
   role: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  leetcodeUrl?: string;
+  hackerrankUrl?: string;
+  profileEvaluation?: string;
+  connections?: string[];
+  connectionRequests?: string[];
+  totalLikes?: number;
+  skills?: any[];
 }
 
 interface AuthContextType {
@@ -59,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

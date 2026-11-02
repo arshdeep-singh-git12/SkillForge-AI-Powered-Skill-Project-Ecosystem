@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-export const updateProfile = async (profileData: { name?: string; bio?: string; avatar?: string; githubUrl?: string; linkedinUrl?: string }) => {
+export const updateProfile = async (profileData: { name?: string; bio?: string; avatar?: string; githubUrl?: string; linkedinUrl?: string; leetcodeUrl?: string; hackerrankUrl?: string }) => {
   const response = await api.put('/users/profile', profileData);
   return response.data;
 };
@@ -34,5 +34,10 @@ export const getUserSkills = async (userId: string) => {
 
 export const addSkill = async (skillData: { name: string; proficiency: number; category?: string }) => {
   const response = await api.post('/skills', skillData);
+  return response.data;
+};
+
+export const getSkillAnalysis = async (userId: string, refresh = false) => {
+  const response = await api.get(`/skills/analysis/${userId}${refresh ? '?refresh=true' : ''}`);
   return response.data;
 };

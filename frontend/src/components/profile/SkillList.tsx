@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserSkills, addSkill } from '../../services/profile.service';
 import ProgressBar from '../ui/ProgressBar';
 import AddSkillModal from './AddSkillModal';
+import SkillAnalyticsDashboard from './SkillAnalyticsDashboard';
 
 interface Skill {
   _id: string;
@@ -48,39 +49,52 @@ export default function SkillList({ userId }: SkillListProps) {
   }
 
   return (
-    <div className="mt-8 interior-panel p-8 bg-white shadow-sm border border-gray-100">
-      <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-        <h2 className="text-2xl font-bold text-gray-900 font-sans">Technical Skills</h2>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="interior-pill interior-pill-active shadow-sm flex items-center gap-2"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-          Add Skill
-        </button>
+    <div className="space-y-6">
+      <div className="mt-8 interior-panel p-8 bg-white shadow-sm border border-gray-100">
+        <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 font-sans">Technical Skills</h2>
+            <p className="text-gray-500 text-xs mt-1">Self-rated technical proficiencies and primary stacks</p>
+          </div>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="interior-pill interior-pill-active shadow-sm flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+            Add Skill
+          </button>
+        </div>
+
+        {skills.length === 0 ? (
+          <p className="text-gray-400 font-sans text-sm text-center py-8 border border-dashed border-gray-200 rounded-xl bg-gray-50">
+            No skills added yet. Showcase your expertise!
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+            {skills.map(skill => (
+              <ProgressBar 
+                key={skill._id}
+                label={skill.name}
+                percentage={skill.proficiency}
+              />
+            ))}
+          </div>
+        )}
+
+        <AddSkillModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onAdd={handleAddSkill}
+        />
       </div>
 
-      {skills.length === 0 ? (
-        <p className="text-gray-400 font-sans text-sm text-center py-8 border border-dashed border-gray-200 rounded-xl bg-gray-50">
-          No skills added yet. Showcase your expertise!
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-          {skills.map(skill => (
-            <ProgressBar 
-              key={skill._id}
-              label={skill.name}
-              percentage={skill.proficiency}
-            />
-          ))}
-        </div>
+      {/* AI Graphical Skills Analysis & Charts Section */}
+      {skills.length > 0 && (
+        <SkillAnalyticsDashboard 
+          userId={userId} 
+          skillsCount={skills.length} 
+        />
       )}
-
-      <AddSkillModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAdd={handleAddSkill}
-      />
     </div>
   );
 }

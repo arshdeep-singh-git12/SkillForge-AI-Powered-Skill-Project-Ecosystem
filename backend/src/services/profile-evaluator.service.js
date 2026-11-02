@@ -22,7 +22,6 @@ const evaluateProfileLinks = async (userId) => {
     try {
       if (process.env.GEMINI_API_KEY) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         
         const prompt = `You are a technical recruiter AI. Analyze this user's professional developer profile based on the linked platforms they have provided.
         User Name: ${user.name}
@@ -35,7 +34,16 @@ const evaluateProfileLinks = async (userId) => {
         Write a short, encouraging 2-3 paragraph analysis of their profile setup. Highlight the strengths of the platforms they have connected (e.g., GitHub shows open source commitment, Leetcode shows algorithmic skills) and provide 1 tip on what they could focus on next.
         Start the response with "### AI Profile Analysis". Keep it professional and concise.`;
 
-        const result = await model.generateContent(prompt);
+        let result;
+        try {
+          const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+          result = await model.generateContent(prompt);
+        } catch (flashErr) {
+          console.warn(`gemini-3.5-flash unavailable (${flashErr.message}), trying gemini-3.5-flash-lite...`);
+          const modelLite = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
+          result = await modelLite.generateContent(prompt);
+        }
+
         evaluation = result.response.text();
         console.log(`🤖 Gemini AI Profile Evaluation generated for user: ${user._id}`);
       } else {

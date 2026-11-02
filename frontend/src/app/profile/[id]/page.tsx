@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import api from '../../../services/api';
 import { useAuth } from '../../../context/AuthContext';
 import { likeProject } from '../../../services/project.service';
+import SkillAnalyticsDashboard from '../../../components/profile/SkillAnalyticsDashboard';
 
 export default function PublicProfilePage() {
   const params = useParams();
@@ -171,16 +172,26 @@ export default function PublicProfilePage() {
 
       {/* Skills */}
       {profileUser.skills?.length > 0 && (
-        <div>
-          <h2 className="text-xl interior-heading mb-4 px-2">Skills</h2>
-          <div className="flex flex-wrap gap-2">
-            {profileUser.skills.map((skill: any) => (
-              <div key={skill._id} className="px-4 py-2 bg-white rounded-xl border border-gray-100 shadow-sm flex items-center gap-2">
-                {skill.iconUrl && <img src={skill.iconUrl} className="w-5 h-5" />}
-                <span className="font-bold text-gray-700 text-sm">{skill.name}</span>
-              </div>
-            ))}
+        <div className="space-y-6">
+          <div className="interior-panel p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
+            <h2 className="text-xl interior-heading mb-4 px-2">Technical Skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {profileUser.skills.map((skill: any) => (
+                <div key={skill._id} className="px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 shadow-sm flex items-center gap-2">
+                  {skill.iconUrl && <img src={skill.iconUrl} className="w-5 h-5" />}
+                  <span className="font-bold text-gray-700 text-sm">{skill.name}</span>
+                  {skill.proficiency && (
+                    <span className="text-xs font-semibold text-cyan bg-cyan/10 px-2 py-0.5 rounded-md">
+                      {skill.proficiency}%
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* AI Practical Skills Intelligence Dashboard */}
+          <SkillAnalyticsDashboard userId={profileUser._id} skillsCount={profileUser.skills.length} />
         </div>
       )}
 
