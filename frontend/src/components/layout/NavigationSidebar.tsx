@@ -72,7 +72,7 @@ export default function NavigationSidebar() {
   };
 
   return (
-    <div className="relative h-[calc(100vh-2rem)] w-64 bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex flex-col z-50 overflow-hidden">
+    <div className="h-full w-full bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex flex-col overflow-hidden">
       
       {/* Brand Logo */}
       <div className="p-6 transition-transform hover:scale-[1.02]">

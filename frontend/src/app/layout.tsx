@@ -34,7 +34,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add('intro'); setTimeout(function(){document.documentElement.classList.remove('intro');},4000);` }} />
       </head>
-      <body className="bg-[#020204] text-[#fff] min-h-screen antialiased font-sans">
+      <body className="min-h-screen antialiased font-sans bg-[#f8fafc] text-gray-900">
         <AuthProvider>
           <ClientLayoutWrapper>
             {children}

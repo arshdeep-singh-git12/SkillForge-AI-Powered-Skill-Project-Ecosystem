@@ -56,10 +56,10 @@ export default function GlobalSearch() {
   };
 
   return (
-    <div className="relative w-full max-w-md mx-4" ref={searchRef}>
+    <div className="relative w-full max-w-md" ref={searchRef}>
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg className="w-5 h-5 text-gray-400 group-focus-within:text-[#0cbde8] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+          <svg className="w-4 h-4 text-gray-400 group-focus-within:text-[#0cbde8] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </div>
@@ -73,12 +73,12 @@ export default function GlobalSearch() {
           onFocus={() => {
             if (query.length >= 2) setIsOpen(true);
           }}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 focus:border-[#0cbde8] focus:ring-1 focus:ring-[#0cbde8] rounded-full text-gray-900 placeholder-gray-400 focus:outline-none transition-all shadow-sm"
+          className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 focus:border-[#0cbde8] focus:ring-1 focus:ring-[#0cbde8] rounded-full text-sm text-gray-900 placeholder-gray-400 focus:outline-none transition-all shadow-sm"
           placeholder="Search profiles, skills, projects..."
         />
         {loading && (
-          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-            <div className="w-4 h-4 border-2 border-[#0cbde8] border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+            <div className="w-3.5 h-3.5 border-2 border-[#0cbde8] border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
       </div>
@@ -88,55 +88,46 @@ export default function GlobalSearch() {
           
           {results.users.length > 0 && (
             <div className="p-2">
-              <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider font-sans">People</div>
+              <span className="text-[10px] uppercase font-bold text-gray-400 px-3 py-1 block">People</span>
               {results.users.map((u: any) => (
                 <button
                   key={u._id}
                   onClick={() => handleUserClick(u._id)}
-                  className="w-full text-left flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 p-2.5 hover:bg-gray-50 rounded-xl transition-colors text-left"
                 >
-                  <div className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                    {u.avatar ? <img src={u.avatar} className="w-full h-full object-cover" /> : <span className="font-bold text-gray-500 font-sans">{u.name.charAt(0)}</span>}
+                  <div className="w-8 h-8 rounded-full bg-cyan/10 text-cyan font-bold flex items-center justify-center text-xs overflow-hidden">
+                    {u.avatar ? <img src={u.avatar} alt="" className="w-full h-full object-cover" /> : u.name[0]}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm font-sans">{u.name}</p>
-                    <p className="text-xs text-gray-500 line-clamp-1 font-sans">{u.bio || 'SkillForge User'}</p>
+                    <h4 className="text-sm font-semibold text-gray-900 leading-none">{u.name}</h4>
+                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{u.bio || 'SkillForge Developer'}</p>
                   </div>
                 </button>
               ))}
             </div>
-          )}
-
-          {results.users.length > 0 && results.projects.length > 0 && (
-            <div className="h-px bg-gray-100 mx-4 my-1"></div>
           )}
 
           {results.projects.length > 0 && (
-            <div className="p-2">
-              <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider font-sans">Projects</div>
+            <div className="p-2 border-t border-gray-50">
+              <span className="text-[10px] uppercase font-bold text-gray-400 px-3 py-1 block">Projects</span>
               {results.projects.map((p: any) => (
                 <button
                   key={p._id}
-                  onClick={() => handleProjectClick(p.githubUrl)}
-                  className="w-full text-left flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition-colors"
+                  onClick={() => handleProjectClick(p.liveUrl || p.githubUrl)}
+                  className="w-full flex items-center justify-between p-2.5 hover:bg-gray-50 rounded-xl transition-colors text-left group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex-shrink-0 flex items-center justify-center border border-blue-100">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 group-hover:text-cyan transition-colors">{p.title}</h4>
+                    <p className="text-xs text-gray-500 line-clamp-1">{p.description}</p>
                   </div>
-                  <div className="flex-1 overflow-hidden">
-                    <p className="font-bold text-gray-900 text-sm truncate font-sans">{p.title}</p>
-                    <p className="text-xs text-gray-500 line-clamp-1 font-sans">by {p.owner?.name}</p>
-                  </div>
+                  <svg className="w-4 h-4 text-gray-300 group-hover:text-cyan -rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </button>
               ))}
             </div>
           )}
-        </div>
-      )}
 
-      {isOpen && query.length >= 2 && results.users.length === 0 && results.projects.length === 0 && !loading && (
-        <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-6 text-center z-[100]">
-          <p className="text-gray-500 text-sm font-sans">No results found for &quot;{query}&quot;</p>
         </div>
       )}
     </div>
