@@ -197,95 +197,124 @@ export default function ProfilePage() {
   const hackerrankUsername = user.hackerrankUrl ? getHackerrankUsername(user.hackerrankUrl) : null;
 
   return (
-    <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-5xl mx-auto font-sans">
-      <h1 className="text-3xl interior-heading mb-1 text-center md:text-left">
-        User Profile
-      </h1>
-
-      <div className="interior-panel p-5 md:p-8 bg-white shadow-sm border border-gray-100">
-        
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center">
-            <span>{error}</span>
+    <div className="space-y-6 max-w-5xl mx-auto font-sans pb-28 md:pb-16">
+      <div className="interior-panel overflow-hidden bg-white shadow-sm border border-gray-100 rounded-[24px]">
+        {/* Sleek Developer Cover Banner */}
+        <div className="relative h-36 sm:h-52 w-full bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 overflow-hidden">
+          {/* Tech Grid Pattern & Ambient Glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(12,189,232,0.18)_1px,transparent_1px)] [background-size:16px_16px]"></div>
+          <div className="absolute -top-12 -right-12 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+          
+          {/* Verified Badge on top right */}
+          <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-6 flex items-center gap-1.5 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-semibold text-cyan-300 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Verified Developer
           </div>
-        )}
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center">
-            <span>Profile updated successfully!</span>
-          </div>
-        )}
+        </div>
 
-        <div className="flex flex-col md:flex-row gap-8 items-start">
-          {/* Photo Section */}
-          <div className="flex-shrink-0 flex flex-col items-center mx-auto md:mx-0">
-            <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden shadow-md bg-gray-100 flex items-center justify-center relative group">
-              {avatar ? (
-                <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-4xl font-bold text-gray-400">{name?.charAt(0).toUpperCase()}</span>
-              )}
-              {isEditing && (
-                <div 
-                  className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                  onClick={() => imageInputRef.current?.click()}
-                >
-                  <span className="text-xs font-bold text-white">Upload Photo</span>
+        {/* Profile Card Body */}
+        <div className="px-5 sm:px-8 pb-8 pt-0">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mt-4 text-sm flex items-center">
+              <span>{error}</span>
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mt-4 text-sm flex items-center">
+              <span>Profile updated successfully!</span>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-14 sm:-mt-20 mb-6">
+            {/* Avatar Section */}
+            <div className="flex-shrink-0 relative group">
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-xl bg-white overflow-hidden relative ring-4 ring-cyan-500/20 flex items-center justify-center">
+                {avatar ? (
+                  <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-3xl sm:text-4xl font-extrabold">
+                    {name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                {isEditing && (
+                  <div 
+                    className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white cursor-pointer transition-opacity"
+                    onClick={() => imageInputRef.current?.click()}
+                  >
+                    <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Change</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Name, Handle & Action Buttons */}
+            <div className="flex-grow text-center sm:text-left w-full">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{user.name}</h2>
+                  <p className="text-sm text-gray-500 font-medium mt-0.5">{user.email}</p>
                 </div>
-              )}
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm hover:shadow"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Edit Profile
+                  </button>
+                )}
+              </div>
+
+              {/* Stats badges */}
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3.5">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-50 border border-cyan-100 rounded-xl text-xs font-bold text-cyan-900 shadow-sm">
+                  <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-xl text-xs font-bold text-rose-700 shadow-sm">
+                  <svg className="w-4 h-4 text-rose-500 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+                  {user.totalLikes || 0} Total Likes
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Form Section */}
-          <div className="flex-grow w-full">
+          <div className="w-full">
             {!isEditing ? (
               <div className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
-                  <p className="text-sm text-gray-500 font-medium mt-1 mb-3">{user.email}</p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-bold text-gray-700 shadow-sm cursor-default hover:bg-gray-100 transition-colors">
-                      <svg className="w-4 h-4 text-[#0cbde8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                      {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
-                    </div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-100 rounded-lg text-sm font-bold text-red-600 shadow-sm cursor-default transition-colors">
-                      <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
-                      {user.totalLikes || 0} Total Likes
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Social Links Display */}
+
+                                {/* Social Links Display */}
                 {(user.githubUrl || user.linkedinUrl || user.leetcodeUrl || user.hackerrankUrl) && (
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-2 pb-2 border-t border-gray-100">
                     {user.githubUrl && (
-                      <a href={user.githubUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1 text-sm font-medium">
+                      <a href={user.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-all shadow-sm">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
                         GitHub
                       </a>
                     )}
                     {user.linkedinUrl && (
-                      <a href={user.linkedinUrl} target="_blank" rel="noreferrer" className="text-[#0a66c2] hover:text-[#004182] transition-colors flex items-center gap-1 text-sm font-medium">
+                      <a href={user.linkedinUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#0a66c2]/5 border border-[#0a66c2]/20 rounded-xl text-xs font-semibold text-[#0a66c2] hover:bg-[#0a66c2]/10 transition-all shadow-sm">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         LinkedIn
                       </a>
                     )}
                     {user.leetcodeUrl && (
-                      <a href={user.leetcodeUrl} target="_blank" rel="noreferrer" className="text-[#ffa116] hover:text-[#e08c10] transition-colors flex items-center gap-1 text-sm font-medium">
+                      <a href={user.leetcodeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#ffa116]/5 border border-[#ffa116]/20 rounded-xl text-xs font-semibold text-[#e08c10] hover:bg-[#ffa116]/10 transition-all shadow-sm">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
                         LeetCode
                       </a>
                     )}
                     {user.hackerrankUrl && (
-                      <a href={user.hackerrankUrl} target="_blank" rel="noreferrer" className="text-[#2ec866] hover:text-[#25a554] transition-colors flex items-center gap-1 text-sm font-medium">
+                      <a href={user.hackerrankUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#2ec866]/5 border border-[#2ec866]/20 rounded-xl text-xs font-semibold text-[#25a554] hover:bg-[#2ec866]/10 transition-all shadow-sm">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M0 0v24h24V0zm9.95 8.002h1.805c.061 0 .111.05.111.111v7.767c0 .061-.05.111-.11.111H9.95c-.061 0-.111-.05-.111-.11v-2.87H7.894v2.87c0 .06-.05.11-.11.11H5.976a.11.11 0 01-.11-.11V8.112c0-.06.05-.11.11-.11h1.806c.061 0 .11.05.11.11v2.869H9.84v-2.87c0-.06.05-.11.11-.11zm2.999 0h5.778c.061 0 .111.05.111.11v7.767a.11.11 0 01-.11.112h-5.78a.11.11 0 01-.11-.11V8.111c0-.06.05-.11.11-.11z"/></svg>
                         HackerRank
                       </a>
                     )}
                   </div>
                 )}
-
-                <div>
+                                <div>
                   <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Biography</h3>
                   <p className="text-gray-700 text-sm leading-relaxed bg-gray-50 p-5 rounded-[16px] border border-gray-100 min-h-[100px]">
                     {user.bio || 'No biography provided yet. Edit your profile to tell us about yourself.'}
@@ -487,34 +516,38 @@ export default function ProfilePage() {
         </div>
       </div>
       
-      {/* Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6 overflow-x-auto">
-        <nav className="-mb-px flex space-x-4 md:space-x-8 min-w-max">
-          <button
-            onClick={() => setActiveTab('skills')}
-            className={`whitespace-nowrap pb-4 px-1 border-b-2 font-bold text-sm ${
-              activeTab === 'skills' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            My Skills
-          </button>
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`whitespace-nowrap pb-4 px-1 border-b-2 font-bold text-sm ${
-              activeTab === 'projects' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            Portfolio Projects
-          </button>
-          <button
-            onClick={() => setActiveTab('certificates')}
-            className={`whitespace-nowrap pb-4 px-1 border-b-2 font-bold text-sm ${
-              activeTab === 'certificates' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            Certificates
-          </button>
-        </nav>
+      {/* Floating Pill Tabs */}
+      <div className="bg-gray-100/90 p-1.5 rounded-2xl flex items-center gap-1.5 overflow-x-auto shadow-inner border border-gray-200/50">
+        <button
+          onClick={() => setActiveTab('skills')}
+          className={`flex-1 min-w-[105px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+            activeTab === 'skills'
+              ? 'bg-white text-gray-900 shadow-sm border border-gray-200/60'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+          }`}
+        >
+          My Skills
+        </button>
+        <button
+          onClick={() => setActiveTab('projects')}
+          className={`flex-1 min-w-[130px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+            activeTab === 'projects'
+              ? 'bg-white text-gray-900 shadow-sm border border-gray-200/60'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+          }`}
+        >
+          Portfolio Projects
+        </button>
+        <button
+          onClick={() => setActiveTab('certificates')}
+          className={`flex-1 min-w-[110px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+            activeTab === 'certificates'
+              ? 'bg-white text-gray-900 shadow-sm border border-gray-200/60'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+          }`}
+        >
+          Certificates
+        </button>
       </div>
 
       {/* Tab Content */}
