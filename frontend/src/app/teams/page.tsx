@@ -70,7 +70,7 @@ export default function TeamsPage() {
     : teams;
 
   return (
-    <div className="p-6 md:p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 interior-card bg-white shadow-sm">
         <div>

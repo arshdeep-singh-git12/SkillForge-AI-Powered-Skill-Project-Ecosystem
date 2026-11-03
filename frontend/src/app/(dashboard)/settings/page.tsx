@@ -65,7 +65,7 @@ export default function SettingsPage() {
   if (!user) return null;
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-4xl mx-auto">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="interior-card bg-white shadow-sm border border-gray-100 p-8 rounded-[24px]">
         <h1 className="text-3xl interior-heading mb-2">Account Settings</h1>
@@ -73,7 +73,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="interior-card bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 rounded-[24px] overflow-hidden">
-        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+        <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-6 md:space-y-8">
           
           {message && (
             <div className={`p-4 rounded-xl border flex items-center gap-3 text-sm font-medium ${
@@ -137,7 +137,7 @@ export default function SettingsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full max-w-lg bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
+                className="w-full md:max-w-lg bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors"
               />
             </div>
 
@@ -151,10 +151,10 @@ export default function SettingsPage() {
                 onChange={(e) => setBio(e.target.value)}
                 rows={5}
                 maxLength={500}
-                className="w-full max-w-2xl bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors resize-none"
+                className="w-full md:max-w-2xl bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors resize-none"
                 placeholder="Tell the community about yourself..."
               ></textarea>
-              <div className="text-right text-xs text-gray-400 max-w-2xl">
+              <div className="text-right text-xs text-gray-400">
                 {bio.length} / 500 characters
               </div>
             </div>

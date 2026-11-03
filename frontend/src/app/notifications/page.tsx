@@ -84,7 +84,7 @@ export default function NotificationsPage() {
   if (!user) return null;
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-5xl mx-auto">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 interior-card bg-white shadow-sm">
         <div>
           <h1 className="text-3xl interior-heading mb-1">
@@ -162,11 +162,11 @@ export default function NotificationsPage() {
                   </div>
                   
                   <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
+                    <div className="flex flex-wrap justify-between items-start gap-1 mb-1">
                       <h3 className={`text-lg ${!notification.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                         {notification.title}
                       </h3>
-                      <span className="text-xs text-gray-400 whitespace-nowrap ml-4">
+                      <span className="text-xs text-gray-400 whitespace-nowrap">
                         {new Date(notification.createdAt).toLocaleDateString()} at {new Date(notification.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </span>
                     </div>

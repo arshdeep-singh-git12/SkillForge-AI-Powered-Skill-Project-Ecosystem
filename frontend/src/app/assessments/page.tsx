@@ -174,7 +174,7 @@ export default function AssessmentsPage() {
   return (
     <div ref={arenaRef} className={`flex flex-col bg-[#020204] text-gray-300 font-sans p-4 gap-4 overflow-hidden ${isFullscreen ? 'h-full w-full' : 'h-[calc(100vh-4rem)]'}`}>
       {/* Top Navbar */}
-      <div className="card px-6 py-3 flex items-center justify-between flex-shrink-0 flex-row">
+      <div className="card px-4 py-2 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 rounded bg-[#0cbde8]/10 flex items-center justify-center text-[#0cbde8]">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
@@ -231,9 +231,9 @@ export default function AssessmentsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 flex-grow min-h-0">
+      <div className="flex flex-col lg:flex-row gap-4 flex-grow min-h-0">
         {/* Left Panel: Description */}
-        <div className="w-full md:w-[40%] card flex flex-col overflow-hidden p-0">
+        <div className="w-full lg:w-[40%] card flex flex-col overflow-hidden p-0">
           <div className="flex gap-6 px-6 py-4 border-b border-[#2d333b] bg-[#161821] text-xs font-semibold uppercase tracking-wider">
             <button className="text-[#0cbde8] border-b-2 border-[#0cbde8] pb-1 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -288,7 +288,7 @@ export default function AssessmentsPage() {
         </div>
 
         {/* Right Panel: Editor & Console */}
-        <div className="w-full md:w-[60%] flex flex-col gap-4 min-w-0 h-full">
+        <div className="w-full lg:w-[60%] flex flex-col gap-4 min-w-0">
           {/* Editor Area */}
           <div className="card flex-grow flex flex-col overflow-hidden p-0 relative">
             <div className="flex items-center justify-between px-4 py-2 bg-[#161821] border-b border-[#2d333b]">

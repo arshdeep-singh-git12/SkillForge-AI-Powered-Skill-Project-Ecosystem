@@ -49,7 +49,7 @@ export default function SignupPage() {
         </div>
 
         <div className="bg-white border border-gray-100 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-300">
-          <div className="p-8 sm:p-10">
+          <div className="p-5 sm:p-10">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">
                 Join SkillForge

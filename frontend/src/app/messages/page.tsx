@@ -119,7 +119,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-full max-w-6xl mx-auto flex flex-col md:flex-row gap-6 p-4 md:p-8">
+    <div className="h-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 md:gap-6 p-3 md:p-8">
       
       {/* Conversations List */}
       <div className={`md:w-1/3 flex flex-col gap-4 ${activeChat ? 'hidden md:flex' : 'flex'} h-[calc(100vh-8rem)]`}>
@@ -171,7 +171,7 @@ export default function MessagesPage() {
       </div>
 
       {/* Active Chat Window */}
-      <div className={`md:w-2/3 flex flex-col h-[calc(100vh-8rem)] ${!activeChat ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`md:w-2/3 flex flex-col h-[calc(100vh-14rem)] md:h-[calc(100vh-8rem)] ${!activeChat ? 'hidden md:flex' : 'flex'}`}>
         {activeChat ? (
           <div className="interior-panel h-full flex flex-col shadow-lg border border-gray-100">
             

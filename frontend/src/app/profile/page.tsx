@@ -197,12 +197,12 @@ export default function ProfilePage() {
   const hackerrankUsername = user.hackerrankUrl ? getHackerrankUsername(user.hackerrankUrl) : null;
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-5xl mx-auto font-sans">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-5xl mx-auto font-sans">
       <h1 className="text-3xl interior-heading mb-1 text-center md:text-left">
         User Profile
       </h1>
 
-      <div className="interior-panel p-8 bg-white shadow-sm border border-gray-100">
+      <div className="interior-panel p-5 md:p-8 bg-white shadow-sm border border-gray-100">
         
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center">
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                       <img 
                         src={`https://ghchart.rshah.org/0ea5e9/${githubUsername}`} 
                         alt={`${githubUsername}'s GitHub Contributions Graph`} 
-                        className="w-full max-w-[800px] min-w-[600px] mix-blend-multiply"
+                        className="w-full max-w-[800px] mix-blend-multiply"
                       />
                     </div>
                   </div>
@@ -488,8 +488,8 @@ export default function ProfilePage() {
       </div>
       
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+        <nav className="-mb-px flex space-x-4 md:space-x-8 min-w-max">
           <button
             onClick={() => setActiveTab('skills')}
             className={`whitespace-nowrap pb-4 px-1 border-b-2 font-bold text-sm ${

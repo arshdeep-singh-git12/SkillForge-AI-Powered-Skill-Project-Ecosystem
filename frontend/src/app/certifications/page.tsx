@@ -61,7 +61,7 @@ export default function CertificationsPage() {
   const externalCerts = certifications.filter(c => c.type === 'external');
 
   return (
-    <div className="p-6 md:p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 interior-card bg-white shadow-sm">
         <div>
@@ -71,7 +71,7 @@ export default function CertificationsPage() {
           <p className="interior-text font-sans text-sm">Showcase your achievements, trophies, and external credentials.</p>
         </div>
         
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
           <input 
             type="file" 
             accept=".pdf" 
@@ -117,7 +117,7 @@ export default function CertificationsPage() {
                 <a href="/assessments" className="text-gray-900 font-bold hover:underline">Complete a Coding Challenge to earn one!</a>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                 {internalTrophies.map((trophy) => (
                   <div key={trophy._id} className="interior-panel hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col items-center text-center group cursor-default relative overflow-hidden bg-white">
                     <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">

@@ -95,7 +95,7 @@ export default function OnboardingPage() {
         </div>
 
         <div className="bg-white border border-gray-100 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-          <div className="p-8 sm:p-12">
+          <div className="p-5 sm:p-12">
             <div className="text-center mb-10">
               <h1 className="text-3xl font-serif font-bold text-gray-900 mb-3">
                 Welcome, {user.name.split(' ')[0]}!
@@ -143,7 +143,7 @@ export default function OnboardingPage() {
                   <div className="flex-grow border-t border-gray-100"></div>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
                   {PRESET_AVATARS.map((avatarUrl, index) => (
                     <button
                       key={index}
@@ -152,7 +152,7 @@ export default function OnboardingPage() {
                         setSelectedAvatar(avatarUrl);
                         setCustomAvatar(''); // Clear custom avatar when picking preset
                       }}
-                      className={`relative w-20 h-20 rounded-full overflow-hidden border-[3px] transition-all duration-200 ${
+                      className={`relative w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-[3px] transition-all duration-200 ${
                         selectedAvatar === avatarUrl 
                           ? 'border-cyan shadow-[0_0_15px_rgba(63,227,255,0.4)] scale-110' 
                           : 'border-transparent hover:border-gray-200 hover:scale-105'
