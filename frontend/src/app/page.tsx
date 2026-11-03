@@ -20,78 +20,70 @@ export default function VertexLandingPage() {
     { url: '/images/certificate_badge.jpg', v: 'plain', t: 'GET CERTIFIED' },
   ];
 
-  // Card creative generator
+  // Card creative generator (Original Pixel-Perfect Desktop Layout)
   const creative = (d: any) => {
     let html = '';
     const im = `<img alt="" src="${d.url}" onerror="this.parentElement.parentElement.classList.add('broken')">`;
     switch (d.v) {
       case 'code':
         html = `
-          <div class="fill" style="background:#070b12"></div>
-          <div class="ph phf" style="opacity:0.38">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(7,11,18,0.1) 0%,rgba(7,11,18,0.92) 58%,#04070c 100%)"></div>
-          <div class="cv" style="top:14px;text-align:right;font-size:9.5px;letter-spacing:.14em;color:#3fe3ff;font-weight:700">LIVE ARENA</div>
-          <div class="cv t-big" style="top:110px;font-size:20px;color:#fff">Code</div>
-          <div class="cv t-big" style="top:132px;font-size:20px;color:#3fe3ff">Challenge</div>
-          <div class="cv" style="top:172px;font-size:10px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.6">
-            <div style="display:flex;align-items:center;gap:6px"><b class="dot" style="background:#3fe3ff"></b>60+ Languages</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:4px"><b class="dot sq" style="background:#3fe3ff"></b>AI Instant Graded</div>
+          <div class="fill" style="background:#0d1117"></div>
+          <div class="ph phf">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(2,2,4,0) 30%,rgba(2,2,4,.85) 68%)"></div>
+          <div class="cv" style="top:12px;text-align:right;font-size:3.4px;letter-spacing:.15em;color:rgba(0,220,255,.7)">LIVE ASSESSMENT</div>
+          <div class="cv t-big" style="top:130px;font-size:13px;color:#fff">Code</div>
+          <div class="cv t-big" style="top:144px;font-size:13px;color:#3fe3ff">Challenge</div>
+          <div class="cv" style="top:170px;font-size:5.2px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.7">
+            <div><b class="dot" style="background:#3fe3ff"></b>60+ LANGUAGES</div>
+            <div style="margin-top:8px"><b class="dot sq" style="background:#3fe3ff"></b>AI GRADED<br><span style="margin-left:11px">INSTANTLY</span></div>
           </div>
         `;
         break;
       case 'dashboard':
         html = `
           <div class="fill" style="background:linear-gradient(180deg,#0a1628,#0d2040 50%,#061020)"></div>
-          <div class="ph" style="top:0;bottom:0;opacity:0.35">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(10,22,40,0.1) 0%,rgba(10,22,40,0.95) 60%)"></div>
-          <div class="cv" style="top:14px;font-size:9.5px;line-height:1.4;color:#3fe3ff;font-weight:700;letter-spacing:.12em">ANALYTICS</div>
-          <div class="cv t-big" style="top:110px;font-size:20px;color:#fff">Skill</div>
-          <div class="cv t-big" style="top:132px;font-size:20px;color:#3fe3ff">Radar</div>
-          <div class="cv" style="top:172px;font-size:10px;color:rgba(255,255,255,.85);line-height:1.5">
-            <div>Growth Tracking: <b>Active</b></div>
-            <div style="margin-top:3px">Verified Mastery: <b>98%</b></div>
-          </div>
+          <div class="ph" style="top:0;bottom:0">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(10,22,40,.95),rgba(10,22,40,0) 30%)"></div>
+          <div class="cv" style="top:12px;font-size:4.2px;line-height:1.7;color:rgba(63,227,255,.9);font-weight:600">SKILL ANALYTICS</div>
+          <div class="cv t-big" style="top:24px;font-size:11px;color:#fff">Your</div>
+          <div class="cv t-big" style="top:36px;font-size:11px;color:#3fe3ff">Progress</div>
         `;
         break;
       case 'ai':
         html = `
-          <div class="fill" style="background:linear-gradient(180deg,#0b0d1e,#101633 60%,#080a14)"></div>
-          <div class="ph" style="top:0;bottom:0;opacity:0.38">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(11,13,30,0.1) 0%,rgba(11,13,30,.95) 60%)"></div>
-          <div class="cv" style="top:14px;font-size:9.5px;letter-spacing:.12em;color:#8ef4ff;font-weight:700">AI MATCHING</div>
-          <div class="cv t-serif" style="top:110px;font-size:22px;color:#fff">Smart</div>
-          <div class="cv t-big" style="top:134px;font-size:18px;color:#8ef4ff">Team Engine</div>
-          <div class="cv" style="top:172px;font-size:10px;color:rgba(255,255,255,.85);line-height:1.4">Complementary skills matched algorithmically</div>
+          <div class="ph phf">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(2,2,4,0) 34%,rgba(2,2,4,.7) 52%,rgba(2,2,4,.95) 72%)"></div>
+          <div class="cv t-big" style="top:126px;font-size:12px;color:#fff">AI-Powered</div>
+          <div class="cv t-big" style="top:140px;font-size:12px;color:#3fe3ff">Matching</div>
+          <div class="cv" style="top:165px;font-size:4.4px;letter-spacing:.07em;color:rgba(255,255,255,.85)">smart team formation</div>
         `;
         break;
       case 'workspace':
         html = `
-          <div class="fill" style="background:linear-gradient(180deg,#120e24,#201438 55%,#0d081a)"></div>
-          <div class="ph" style="top:0;bottom:0;opacity:0.38">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(18,14,36,0.1) 0%,rgba(18,14,36,.95) 60%)"></div>
-          <div class="cv" style="top:14px;font-size:9.5px;color:rgba(216,180,254,.95);font-weight:700;letter-spacing:.12em">COLLAB</div>
-          <div class="cv t-big" style="top:110px;font-size:20px;color:#fff">Project</div>
-          <div class="cv t-big" style="top:132px;font-size:20px;color:#d8b4fe">Ecosystem</div>
-          <div class="cv" style="top:172px;font-size:10px;color:rgba(255,255,255,.85);line-height:1.4">Real-time contract teams & live repositories</div>
+          <div class="ph phf">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(3,9,20,0) 30%,rgba(3,9,20,.75) 55%,rgba(3,9,20,.97) 75%)"></div>
+          <div class="cv t-big" style="top:126px;font-size:10px;color:#fff;opacity:.9">Build · Ship</div>
+          <div class="cv t-big" style="top:140px;font-size:20px;color:#3fe3ff;text-shadow:0 0 16px rgba(63,227,255,.5)">Portfolio</div>
         `;
         break;
       case 'cert':
         html = `
-          <div class="fill" style="background:linear-gradient(180deg,#081c1c,#0a2e2a 55%,#041212)"></div>
-          <div class="ph" style="top:0;bottom:0;opacity:0.38">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(8,28,28,0.1) 0%,rgba(8,28,28,.95) 60%)"></div>
-          <div class="cv" style="top:14px;text-align:right;font-size:9.5px;color:#2ec866;font-weight:700;letter-spacing:.12em">VERIFIABLE</div>
-          <div class="cv t-big" style="top:110px;font-size:20px;color:#fff">Proof of</div>
-          <div class="cv t-big" style="top:132px;font-size:20px;color:#2ec866">Skill</div>
-          <div class="cv" style="top:172px;font-size:10px;color:rgba(255,255,255,.85);line-height:1.4">Cryptographic verifiable credential badges</div>
+          <div class="fill" style="background:linear-gradient(158deg,#0a1e3d 0%,#0d2850 40%,#143a6b 66%,#0a1e3d 100%)"></div>
+          <div class="ph" style="top:0;bottom:0;opacity:.85">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(10,30,61,.9),rgba(10,30,61,0) 40%)"></div>
+          <div class="cv" style="top:12px;font-size:4px;letter-spacing:.15em;color:rgba(63,227,255,.8);font-weight:600">VERIFIED CREDENTIAL</div>
+          <div class="cv t-big" style="top:130px;font-size:18px;color:#fff;text-shadow:0 2px 0 rgba(10,30,61,.8)">Certified</div>
+          <div class="cv t-big" style="top:152px;font-size:14px;color:#3fe3ff">Developer</div>
         `;
         break;
+      case 'plain':
       default:
         html = `
-          <div class="fill" style="background:#080b10">${im}</div>
-          <div class="fill" style="background:linear-gradient(180deg,rgba(8,11,16,0.1) 0%,rgba(8,11,16,.92) 65%)"></div>
-          <div class="cv t-big" style="bottom:20px;font-size:16px;color:#fff;letter-spacing:.04em">${d.t || 'SKILLFORGE'}</div>
+          <div class="ph phf">${im}</div>
+          <div class="fill" style="background:linear-gradient(180deg,rgba(2,2,4,0) 38%,rgba(2,2,4,.88) 68%)"></div>
+          <div class="cv" style="top:150px;font-size:5.4px;font-weight:600;letter-spacing:.2em;color:#fff">${d.t || ''}</div>
         `;
+        break;
     }
     return html + '<div class="edge"></div>';
   };
@@ -147,33 +139,28 @@ export default function VertexLandingPage() {
       const isMobile = window.innerWidth <= 700;
       
       if (isMobile) {
-        // --- MOBILE FLOATING FLOW STREAM ---
-        // Cards float across the screen horizontally with gentle organic levitation
+        // --- MOBILE: SMOOTH CONTINUOUS FLOATING STREAM ---
         const cardWidth = 148;
-        const spacing = 172; // Crisp ~24px gap between cards
+        const spacing = 172;
         const totalTrack = n * spacing;
         
-        if (playing) mobileOffset += 36 * dt; // Smooth continuous glide (36px/s)
+        if (playing) mobileOffset += 36 * dt;
         
         const halfVw = window.innerWidth / 2;
         
         for (let i = 0; i < n; i++) {
-          // Calculate looped x coordinate centered at viewport middle
           let x = ((i * spacing - mobileOffset) % totalTrack + totalTrack) % totalTrack;
           if (x > totalTrack / 2) x -= totalTrack;
           
-          // Cull off-screen cards
           if (Math.abs(x) > halfVw + cardWidth) {
             cards[i].style.visibility = 'hidden';
             continue;
           }
           cards[i].style.visibility = 'visible';
           
-          // Gentle sinusoidal levitation wave & subtle rotation
           const floatY = Math.sin(t * 0.0022 + i * 1.1) * 9;
           const floatRot = Math.sin(t * 0.0018 + i * 0.8) * 1.8;
           
-          // Subtle scale and opacity focus at center
           const distFromCenter = Math.abs(x) / (halfVw + 60);
           const scale = Math.max(0.92, 1 - distFromCenter * 0.12);
           const opacity = Math.max(0.65, 1 - distFromCenter * 0.4);
@@ -183,7 +170,7 @@ export default function VertexLandingPage() {
           cards[i].style.filter = `brightness(${1 - distFromCenter * 0.15}) drop-shadow(0 14px 28px rgba(0,0,0,0.65))`;
         }
       } else {
-        // --- DESKTOP 3D VERTEX HORIZON WITH FLOATING LEVITATION ---
+        // --- PC: EXACT ORIGINAL 3D VERTEX HORIZON ---
         if (playing) phase -= 1.9 * dt;
         const R = 891;
         const maxAngle = 42;
@@ -197,12 +184,9 @@ export default function VertexLandingPage() {
           cards[i].style.visibility = 'visible';
           const r = a * Math.PI / 180;
           const cos = Math.cos(r);
-          // Subtle vertical float wave for deep space weightlessness
-          const floatY = Math.sin(t * 0.0016 + i) * 5;
-          
-          cards[i].style.transform = `translate3d(${R * Math.sin(r)}px, ${floatY}px, ${R * (1 - cos)}px) rotateY(${-a}deg)`;
+          cards[i].style.transform = 'translate3d(' + (R * Math.sin(r)) + 'px, 0, ' + (R * (1 - cos)) + 'px) rotateY(' + (-a) + 'deg)';
           cards[i].style.opacity = '1';
-          cards[i].style.filter = `brightness(${0.84 + 0.5 * (1 / cos - 1)})`;
+          cards[i].style.filter = 'brightness(' + (0.84 + 0.5 * (1 / cos - 1)) + ')';
         }
       }
       rAF = requestAnimationFrame(tick);
@@ -301,7 +285,7 @@ export default function VertexLandingPage() {
   return (
     <div className="stage bg-[#020204] text-white font-sans text-left">
       <style dangerouslySetInnerHTML={{__html: `
-        /* Desktop base rules */
+        /* Desktop base rules (100% exact original) */
         @media (min-width: 701px) {
           html, body { overflow: hidden !important; height: 100vh !important; width: 100% !important; margin: 0; padding: 0; }
           .stage { position: fixed; inset: 0; overflow: hidden; }
@@ -324,6 +308,7 @@ export default function VertexLandingPage() {
           .card { position: absolute; left: 586px; top: 616px; width: 130px; height: 300px; margin: -150px 0 0 -65px; border-radius: 12px; overflow: hidden; background: #0d1117; box-shadow: 0 24px 46px rgba(0,0,0,.6), 0 3px 8px rgba(0,0,0,.5); backface-visibility: hidden; will-change: transform; }
           .navmenu { display: contents; }
           .burger { display: none; }
+          .showcase-glow { display: none !important; }
         }
 
         .stage * { box-sizing: border-box; }
@@ -370,7 +355,7 @@ export default function VertexLandingPage() {
           .ring { transform: scale(var(--rs, 1)); transform-origin: 586px 595px; }
         }
 
-        /* ─── FULL MOBILE OPTIMIZATION (<= 700px) ─── */
+        /* ─── MOBILE EXPERIENCE (<= 700px) ─── */
         @media (max-width: 700px) {
           html, body {
             overflow-y: auto !important;
@@ -483,15 +468,15 @@ export default function VertexLandingPage() {
             position: static !important;
             display: flex !important;
             flex-direction: column !important;
-            align-items: stretch !important;
+            gap: 12px !important;
             height: auto !important;
-            gap: 2px !important;
-            transform: none !important;
+            margin-bottom: 12px !important;
           }
           .links a {
-            font-size: 15px !important;
             padding: 10px 14px !important;
             border-radius: 10px !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
             color: rgba(255,255,255,.9) !important;
           }
           .links a:hover { background: rgba(255,255,255,0.06); }
@@ -511,7 +496,7 @@ export default function VertexLandingPage() {
             font-size: 14px !important;
           }
           
-          /* Hero Badge */
+          /* Hero Badge Mobile */
           .badge {
             position: relative !important;
             left: auto !important;
@@ -536,7 +521,7 @@ export default function VertexLandingPage() {
           .badge i { top: 3px !important; left: 3px !important; width: 28px !important; height: 28px !important; }
           .badge i svg { width: 13px !important; height: 18px !important; }
           
-          /* Typography */
+          /* Typography Mobile */
           .h1 {
             position: relative !important;
             left: auto !important;
@@ -569,7 +554,7 @@ export default function VertexLandingPage() {
           #sub1 { margin-top: 12px !important; }
           #sub2 { margin-top: 2px !important; }
           
-          /* Hero CTA */
+          /* Hero CTA Mobile */
           .hero-cta {
             position: relative !important;
             left: auto !important;
@@ -584,7 +569,7 @@ export default function VertexLandingPage() {
             font-size: 15px !important;
           }
           
-          /* Floating Flow Showcase Mobile */
+          /* Mobile Showcase Floating Ribbon */
           .showcase {
             position: relative !important;
             left: auto !important;
@@ -601,6 +586,16 @@ export default function VertexLandingPage() {
             align-items: center !important;
             mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%) !important;
             -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%) !important;
+          }
+          .showcase-glow {
+            display: block !important;
+            position: absolute !important;
+            width: 340px !important;
+            height: 180px !important;
+            border-radius: 50% !important;
+            background: radial-gradient(circle, rgba(63,227,255,0.18) 0%, rgba(99,102,241,0.08) 50%, transparent 80%) !important;
+            filter: blur(50px) !important;
+            pointer-events: none !important;
           }
           .ring {
             position: absolute !important;
@@ -626,6 +621,8 @@ export default function VertexLandingPage() {
             backface-visibility: hidden !important;
             will-change: transform, opacity !important;
           }
+          .card .cv.t-big { font-size: 16px !important; }
+          .card .cv { font-size: 8px !important; }
           
           .wa {
             width: 48px !important;
@@ -644,7 +641,7 @@ export default function VertexLandingPage() {
       <div ref={canvasRef} className="canvas">
         <div className="stack">
           {/* NAV PILL */}
-          <div className="nav v-nav-pill">
+          <div className="nav absolute v-nav-pill">
             <svg className="mark absolute" viewBox="0 0 48 48" style={{ filter: 'drop-shadow(0 0 6px rgba(60,224,255,.75))' }}>
               <defs>
                 <linearGradient id="sw" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
@@ -686,31 +683,31 @@ export default function VertexLandingPage() {
             </div>
           </div>
 
-          {/* BADGE */}
-          <div className="badge v-badge">
+          {/* BADGE (EXACT ORIGINAL DESKTOP INLINE POSITIONING) */}
+          <div className="badge absolute v-badge">
             <i className="v-badge-icon" style={{position:'absolute',left:'4px',top:'4px',width:'29px',height:'29px'}}>
               <svg viewBox="5 1 14 22" preserveAspectRatio="none" fill="rgba(16,112,152,.72)" stroke="rgba(190,236,255,.6)" strokeWidth="1.6" strokeLinejoin="round" style={{width:'14px',height:'16px',position:'relative',top:'-1px'}}>
                 <path d="M13.9 1.6 5.5 13.6a.7.7 0 0 0 .6 1.1h4.2l-1 7.7a.7.7 0 0 0 1.25.55l8.3-12.1a.7.7 0 0 0-.6-1.1h-4.2l1-7.7a.7.7 0 0 0-1.25-.55Z" />
               </svg>
             </i>
-            <b className="v-badge-text" style={{transformOrigin:'0 50%'}}>
+            <b className="v-badge-text" style={{position:'absolute',left:'45px',top:'0',height:'39px',transformOrigin:'0 50%'}}>
               AI-Powered Skill & Project Ecosystem
             </b>
           </div>
           
           {/* HERO TEXT */}
-          <div id="h1a" className="h1 l1">Forge Your Skills</div>
-          <div id="h1b" className="h1">Build Projects</div>
+          <div id="h1a" className="h1 absolute l1">Forge Your Skills</div>
+          <div id="h1b" className="h1 absolute">Build Projects</div>
           
-          <div id="sub1" className="sub s1"><b>Rigorous coding assessments</b> with AI-powered evaluation across</div>
-          <div id="sub2" className="sub">60+ languages, verifiable portfolios, and smart team matching.</div>
+          <div id="sub1" className="sub absolute s1"><b>Rigorous coding assessments</b> with AI-powered evaluation across</div>
+          <div id="sub2" className="sub absolute">60+ languages, verifiable portfolios, and smart team matching.</div>
           
           {/* HERO CTA */}
           <Link href="/signup" className="v-btn hero-cta"><span style={{position:'relative',zIndex:2,display:'block',lineHeight:1}}>Forge Your Legacy →</span></Link>
         </div>
         
         <div className="showcase">
-          <div className="showcase-glow" style={{ position: 'absolute', width: '340px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(63,227,255,0.18) 0%, rgba(99,102,241,0.08) 50%, transparent 80%)', filter: 'blur(50px)', pointerEvents: 'none' }}></div>
+          <div className="showcase-glow"></div>
           <div ref={ringRef} className="ring"></div>
         </div>
       </div>

@@ -275,7 +275,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-xl text-xs font-bold text-rose-700 shadow-sm">
                   <svg className="w-4 h-4 text-rose-500 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.343l-8.828-8.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
-                  {user.totalLikes || 0} Total Likes
+                  {Math.max(0, user.totalLikes || 0)} Total Likes
                 </div>
               </div>
             </div>
