@@ -200,35 +200,35 @@ export default function ProfilePage() {
     <div className="space-y-6 max-w-5xl mx-auto font-sans pb-28 md:pb-16 w-full max-w-full min-w-0 overflow-x-hidden">
       <div className="interior-panel overflow-hidden bg-white shadow-sm border border-gray-100 rounded-[24px]">
         {/* Sleek Developer Cover Banner */}
-        <div className="relative h-36 sm:h-52 w-full bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 overflow-hidden">
+        <div className="relative h-32 sm:h-44 md:h-48 w-full bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 overflow-hidden">
           {/* Tech Grid Pattern & Ambient Glow */}
           <div className="absolute inset-0 bg-[radial-gradient(rgba(12,189,232,0.18)_1px,transparent_1px)] [background-size:16px_16px]"></div>
           <div className="absolute -top-12 -right-12 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
           
           {/* Verified Badge on top right */}
-          <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-6 flex items-center gap-1.5 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-semibold text-cyan-300 shadow-sm">
+          <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-6 flex items-center gap-1.5 px-3 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-xs font-semibold text-cyan-300 shadow-sm z-10">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Verified Developer
           </div>
         </div>
 
         {/* Profile Card Body */}
-        <div className="px-4 py-5 sm:px-8 sm:pb-8 sm:pt-0 w-full max-w-full overflow-hidden">
+        <div className="relative z-10 px-4 py-5 sm:px-8 sm:pb-8 sm:pt-4 w-full max-w-full">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mt-4 text-sm flex items-center">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm flex items-center">
               <span>{error}</span>
             </div>
           )}
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mt-4 text-sm flex items-center">
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-4 text-sm flex items-center">
               <span>Profile updated successfully!</span>
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-5 -mt-12 sm:-mt-20 mb-6 w-full max-w-full">
-            {/* Avatar Section */}
-            <div className="flex-shrink-0 relative group">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-6 w-full max-w-full">
+            {/* Avatar Section - Floating cleanly over the banner border */}
+            <div className="-mt-14 sm:-mt-20 flex-shrink-0 relative z-20">
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-xl bg-white overflow-hidden relative ring-4 ring-cyan-500/20 flex items-center justify-center">
                 {avatar ? (
                   <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
@@ -249,17 +249,21 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Name, Handle & Action Buttons */}
-            <div className="flex-grow text-center sm:text-left w-full">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{user.name}</h2>
-                  <p className="text-sm text-gray-500 font-medium mt-0.5">{user.email}</p>
+            {/* Name, Handle & Action Buttons - Positioned completely on the white card */}
+            <div className="flex-grow text-center sm:text-left w-full min-w-0 pt-0 sm:pt-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-tight truncate sm:overflow-visible">
+                    {user.name}
+                  </h2>
+                  <p className="text-sm text-gray-500 font-medium mt-0.5 truncate sm:overflow-visible">
+                    {user.email}
+                  </p>
                 </div>
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm hover:shadow w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-all shadow-sm hover:shadow w-full sm:w-auto self-center sm:self-auto flex-shrink-0"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Edit Profile
@@ -268,7 +272,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Stats badges */}
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3.5">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-50 border border-cyan-100 rounded-xl text-xs font-bold text-cyan-900 shadow-sm">
                   <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                   {user.connections?.length || 0} Forge Mate{user.connections?.length !== 1 ? 's' : ''}
@@ -389,12 +393,6 @@ export default function ProfilePage() {
                     </a>
                   </div>
                 )}
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="interior-pill bg-white shadow-sm border border-gray-200"
-                >
-                  Edit Profile
-                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
