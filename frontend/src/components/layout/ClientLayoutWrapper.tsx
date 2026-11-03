@@ -57,7 +57,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-gray-900 flex">
+    <div className="min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col md:flex-row w-full max-w-full overflow-x-hidden">
       {/* ─── Desktop Sidebar ─── */}
       <aside className="fixed left-4 top-4 bottom-4 w-64 z-40 hidden md:block">
         <NavigationSidebar />
@@ -90,9 +90,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       )}
 
       {/* ─── Main Content ─── */}
-      <div className="flex-1 md:pl-72 flex flex-col min-h-screen">
+      <div className="flex-1 md:pl-72 flex flex-col min-h-screen w-full max-w-full min-w-0 overflow-x-hidden">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 h-16 bg-[#f8fafc]/95 backdrop-blur-md flex items-center gap-3 px-4 md:px-6 border-b border-gray-200/60">
+        <header className="sticky top-0 z-30 h-16 bg-[#f8fafc]/95 backdrop-blur-md flex items-center gap-3 px-3 sm:px-4 md:px-6 border-b border-gray-200/60 w-full max-w-full">
           {/* Hamburger (mobile only) */}
           <button
             onClick={() => setSidebarOpen(true)}
@@ -116,7 +116,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
         </header>
 
         {/* Page Content — extra bottom padding on mobile for bottom nav */}
-        <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
+        <main className="flex-1 p-3 sm:p-5 md:p-8 pb-28 md:pb-8 w-full max-w-full min-w-0 overflow-x-hidden">
           {children}
         </main>
       </div>
