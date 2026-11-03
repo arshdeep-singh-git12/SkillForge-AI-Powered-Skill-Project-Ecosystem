@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
@@ -24,6 +24,12 @@ export const metadata: Metadata = {
     'Technical contract ecosystem for developers. Rigorous assessments, verifiable portfolios, and algorithmic team formation.',
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -31,9 +37,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable} ${playfair.variable}`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add('intro'); setTimeout(function(){document.documentElement.classList.remove('intro');},4000);` }} />
-      </head>
       <body className="min-h-screen antialiased font-sans bg-[#f8fafc] text-gray-900">
         <AuthProvider>
           <ClientLayoutWrapper>
